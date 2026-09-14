@@ -68,7 +68,13 @@
     </span>
     <span class="location-panel__lat">--</span>
     <span class="location-panel__lng">--</span>
-    <a class="location-panel__about" id="about-btn" href="#about" role="button">About this project <span class="location-panel__about-arrow" aria-hidden="true">&rarr;</span></a>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-block-start: var(--space-4);">
+      <a class="location-panel__about" id="about-btn" href="#about" role="button" style="margin-block-start: 0;">About this project <span class="location-panel__about-arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="location-panel__about" id="marketplace-btn" href="#marketplace" role="button" style="margin-block-start: 0;">1. Marketplace <span class="location-panel__about-arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="location-panel__about" id="escrow-btn" href="#escrow" role="button" style="margin-block-start: 0;">2. Escrow & Wallet <span class="location-panel__about-arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="location-panel__about" id="telemetry-btn" href="#telemetry" role="button" style="margin-block-start: 0;">3. Telemetry Oracle <span class="location-panel__about-arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="location-panel__about" id="agent-btn" href="#agent" role="button" style="margin-block-start: 0;">4. Agent API / Docs <span class="location-panel__about-arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
   </header>
 
   <!-- Control strip (middle-right) -->
@@ -282,10 +288,371 @@
   <div class="mobile-drawer" id="mobile-drawer"></div>
 
   
+  <!-- Marketplace modal -->
+  <div class="about-modal" id="marketplace-modal" role="dialog" aria-modal="true" hidden>
+    <div class="about-modal__backdrop" data-close-marketplace></div>
+    <div class="about-modal__panel" style="max-width: 1260px; width: 95%; max-height: 92vh; padding: 0; overflow: hidden; overflow-y: auto; background: rgba(10, 10, 18, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; box-shadow: none;">
+      
+      <style>
+        .mkt-stage {
+          color: #d8d8de;
+          font-family: 'Geist', system-ui, -apple-system, sans-serif;
+          display: flex;
+          flex-direction: column;
+          min-height: 680px;
+          position: relative;
+        }
+        .mkt-stage * { box-sizing: border-box; }
+        
+        .mkt-marquee {
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          background: rgba(255,255,255,0.02);
+          height: 32px;
+          display: flex;
+          align-items: center;
+          overflow: hidden;
+        }
+        .mkt-marquee-track {
+          display: flex;
+          gap: 38px;
+          white-space: nowrap;
+          animation: mktScrollLeft 28s linear infinite;
+          font-family: var(--font-mono, "SF Mono", "Menlo", monospace);
+          font-size: 11px;
+          color: #909097;
+        }
+        .mkt-marquee-track span { color: #5b8def; }
+        .mkt-marquee-track b { color: #fff; font-weight: 600; }
+        @keyframes mktScrollLeft {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
 
+        .mkt-topbar {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 0 24px; height: 60px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .mkt-brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 14px; font-weight: 600; color: #fff; }
+        .mkt-brand img { height: 18px; }
+        .mkt-brand small { color: #909097; font-weight: 400; }
+
+        .mkt-tabs { display: flex; height: 100%; }
+        .app-tab {
+          display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+          padding: 0 18px;
+          border-left: 1px solid rgba(255,255,255,0.04);
+          position: relative;
+          min-width: 108px;
+          cursor: pointer;
+        }
+        .app-tab:last-child { border-right: 1px solid rgba(255,255,255,0.04); }
+        .app-tab .name { font-size: 12px; letter-spacing: 0.06em; color: #909097; transition: color 0.2s; }
+        .app-tab .live { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+        .app-tab .live .d { width: 5px; height: 5px; background: #5b8def; border-radius: 50%; opacity: 0.5; }
+        .app-tab .live span { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 9.5px; color: #666; }
+        .app-tab:hover .name { color: #d8d8de; }
+        .app-tab.active .name { color: #fff; font-weight: 600; }
+        .app-tab.active::after {
+          content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+          background: #5b8def;
+        }
+
+        .mkt-wallet { display: flex; align-items: center; gap: 10px; font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 12px; color: #909097; }
+        .mkt-wallet .dot { width: 6px; height: 6px; background: #4ecb71; border-radius: 50%; }
+        .mkt-wallet .addr { color: #fff; }
+        .mkt-wallet .net { padding: 3px 8px; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #909097; font-size: 10px; letter-spacing: 0.05em; }
+
+        .mkt-ask-zone { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .mkt-ask-label { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11px; letter-spacing: 0.12em; color: #909097; margin-bottom: 8px; }
+
+        .mkt-ask-bar {
+          display: flex; align-items: center; gap: 14px;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 8px;
+          background: rgba(255,255,255,0.02);
+          padding: 10px 16px;
+        }
+        .mkt-ask-bar .query { flex: 1; font-size: 15px; font-weight: 400; color: #fff; }
+        .mkt-ask-bar .cursor { display: inline-block; width: 2px; height: 16px; background: #5b8def; vertical-align: -3px; margin-left: 2px; animation: mktBlink 1s steps(1) infinite; }
+        @keyframes mktBlink { 50% { opacity: 0; } }
+        .mkt-ask-bar .run {
+          font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11.5px; letter-spacing: 0.06em; font-weight: 600;
+          color: #fff; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+          padding: 8px 14px; white-space: nowrap; cursor: pointer;
+        }
+
+        .mkt-filters {
+          display: grid;
+          grid-template-columns: 1fr 1.3fr 1.3fr 0.9fr 0.9fr;
+          gap: 1px;
+          margin-top: 14px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.06);
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .mkt-filter { padding: 10px 14px; background: rgba(10, 10, 18, 0.9); }
+        .mkt-filter .fl {
+          font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 9.5px; letter-spacing: 0.1em; color: #909097;
+          display: flex; justify-content: space-between; margin-bottom: 8px;
+        }
+        .mkt-filter .fl .val { color: #5b8def; font-weight: 600; }
+        .mkt-filter select {
+          width: 100%; background: transparent; border: none; color: #d8d8de;
+          font-family: inherit; font-size: 13px; outline: none; appearance: none; cursor: pointer;
+        }
+        .mkt-filter select option { background: #111; }
+        
+        .mkt-filter input[type=range] { width: 100%; height: 2px; background: rgba(255,255,255,0.1); appearance: none; outline: none; margin: 0; }
+        .mkt-filter input[type=range]::-webkit-slider-thumb {
+          appearance: none; width: 10px; height: 10px; background: #5b8def; border-radius: 50%; cursor: pointer;
+        }
+
+        .mkt-body-grid { display: grid; grid-template-columns: 280px 1fr 240px; flex: 1; }
+        .mkt-col { padding: 20px 24px; }
+        .mkt-col-left { border-right: 1px solid rgba(255,255,255,0.06); }
+        .mkt-col-right { border-left: 1px solid rgba(255,255,255,0.06); }
+        .mkt-section-title { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11px; letter-spacing: 0.12em; color: #909097; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .mkt-section-title .d { width: 5px; height: 5px; background: #fff; opacity: 0.3; border-radius: 50%; }
+
+        .mkt-req-row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .mkt-req-key { font-size: 13px; color: #909097; }
+        .mkt-req-val { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 12px; color: #d8d8de; font-weight: 500; }
+
+        .mkt-scan-box {
+          margin-top: 18px; padding: 12px; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
+          background: rgba(255,255,255,0.02); font-size: 12px; color: #909097; line-height: 1.5;
+        }
+        .mkt-scan-box b { color: #fff; }
+
+        .mkt-cand-head { display: grid; grid-template-columns: 24px 1.6fr 1fr 0.8fr 0.8fr 0.8fr; gap: 10px; padding: 0 12px 10px; font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 10px; letter-spacing: 0.08em; color: #666; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .mkt-cand-row { display: grid; grid-template-columns: 24px 1.6fr 1fr 0.8fr 0.8fr 0.8fr; gap: 10px; align-items: center; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.04); border-radius: 6px; margin: 4px 0; }
+        .mkt-cand-row.selected { background: rgba(91,141,239,0.08); border: 1px solid rgba(91,141,239,0.2); }
+        .mkt-rank-num { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11px; color: #666; }
+        .mkt-sat-cell { display: flex; align-items: center; gap: 8px; }
+        .mkt-op-logo { width: 22px; height: 22px; flex: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 9px; font-weight: 600; color: #fff; background: rgba(255,255,255,0.04); }
+        .mkt-sat-name { font-size: 13px; font-weight: 500; color: #fff; }
+        .mkt-op-name { font-size: 10px; color: #666; font-family: var(--font-mono, "SF Mono", "Menlo", monospace); }
+        .mkt-cell { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 12px; color: #909097; }
+        .mkt-cell b { color: #fff; font-weight: 500; }
+        .mkt-match { display: flex; align-items: center; gap: 6px; }
+        .mkt-match-bar { width: 30px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+        .mkt-match-bar span { display: block; height: 100%; background: #5b8def; }
+        .mkt-match-pct { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11px; color: #5b8def; }
+
+        .mkt-feed-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11px; color: #909097; }
+        .mkt-feed-item b { color: #d8d8de; font-weight: 500; }
+        .mkt-feed-item .t { color: #666; font-size: 9.5px; display: block; margin-top: 3px; }
+        .mkt-feed-item.ok b { color: #4ecb71; }
+
+        .mkt-detail-card { border-top: 1px solid rgba(255,255,255,0.06); background: rgba(0,0,0,0.2); margin-top: auto; }
+        .mkt-detail-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .mkt-detail-head .tag { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 10.5px; letter-spacing: 0.08em; color: #666; }
+        .mkt-detail-head .sat { font-size: 18px; font-weight: 500; color: #fff; }
+        .mkt-countdown { color: #ffcc33; }
+        
+        .mkt-detail-body { display: grid; grid-template-columns: repeat(4, 1fr); }
+        .mkt-stat { padding: 14px 24px; border-right: 1px solid rgba(255,255,255,0.04); }
+        .mkt-stat:last-child { border-right: none; }
+        .mkt-stat .l { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 9.5px; letter-spacing: 0.08em; color: #909097; margin-bottom: 6px; }
+        .mkt-stat .v { font-size: 14px; font-weight: 500; color: #fff; }
+        .mkt-stat .v.ok { color: #4ecb71; }
+        
+        .mkt-book-zone { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-top: 1px solid rgba(255,255,255,0.04); }
+        .mkt-book-zone .esc { font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 11px; color: #666; }
+        .mkt-book-btn {
+          font-family: var(--font-mono, "SF Mono", "Menlo", monospace); font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+          color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 10px 24px; cursor: pointer;
+        }
+        .mkt-book-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .mkt-close-btn { position: absolute; top: 12px; right: 16px; background: none; border: none; color: #909097; font-size: 24px; line-height: 1; cursor: pointer; z-index: 10; }
+        .mkt-close-btn:hover { color: #fff; }
+      </style>
+
+      <div class="mkt-stage">
+        <button class="mkt-close-btn" data-close-marketplace aria-label="Close">&times;</button>
+        
+        <div class="mkt-marquee">
+          <div class="mkt-marquee-track">
+            <span>●</span> <b>SAT-19</b> booked by 0x71a…4f2 &middot; <span>●</span> escrow released on <b>SAT-04</b> &middot; $58.00 &rarr; operator &middot; <span>●</span> <b>SAT-31</b> telemetry verified, 99.2% match &middot; <span>●</span> new listing: <b>SAT-22</b> over South Atlantic, 40 Mbps &middot; <span>●</span> <b>SAT-19</b> booked by 0x71a…4f2 &middot; <span>●</span> escrow released on <b>SAT-04</b> &middot; $58.00 &rarr; operator &middot; <span>●</span> <b>SAT-31</b> telemetry verified, 99.2% match &middot; <span>●</span> new listing: <b>SAT-22</b> over South Atlantic, 40 Mbps &middot;
+          </div>
+        </div>
+
+        <div class="mkt-topbar">
+          <div class="mkt-brand">
+            <img src="./DSRM_logo.png" alt="DSRM"> @DRSM_LOGO <small>/ live network</small>
+          </div>
+          <div class="mkt-tabs">
+            <div class="app-tab active" id="tab-marketplace"><div class="name">MARKETPLACE</div><div class="live"><span class="d"></span><span>128 live</span></div></div>
+            <div class="app-tab" id="tab-escrow"><div class="name">ESCROW &amp; WALLET</div><div class="live"><span class="d"></span><span>34 open</span></div></div>
+            <div class="app-tab" id="tab-telemetry"><div class="name">TELEMETRY ORACLE</div><div class="live"><span class="d"></span><span>streaming</span></div></div>
+            <div class="app-tab" id="tab-agent"><div class="name">AGENT API / DOCS</div><div class="live"><span class="d"></span><span>19 active</span></div></div>
+          </div>
+          <div class="mkt-wallet"><span class="dot"></span><span class="addr">0x4f2a…9c1e</span><span class="net">SEPOLIA</span></div>
+        </div>
+
+        <div class="mkt-ask-zone">
+          <div class="mkt-ask-label">ASK THE NETWORK</div>
+          <div class="mkt-ask-bar">
+            <div class="query">I need 10 minutes of connectivity over India tomorrow morning.<span class="cursor"></span></div>
+            <div class="run">SEARCH &rarr;</div>
+          </div>
+
+          <div class="mkt-filters">
+            <div class="mkt-filter">
+              <div class="fl">LOCATION</div>
+              <select><option>India</option><option>Global</option></select>
+            </div>
+            <div class="mkt-filter">
+              <div class="fl">BANDWIDTH <span class="val">≥ 20 Mbps</span></div>
+              <input type="range" min="1" max="200" value="20">
+            </div>
+            <div class="mkt-filter">
+              <div class="fl">BUDGET <span class="val">≤ $50</span></div>
+              <input type="range" min="5" max="500" value="50">
+            </div>
+            <div class="mkt-filter">
+              <div class="fl">DURATION</div>
+              <select><option>10 min</option><option>60 min</option></select>
+            </div>
+            <div class="mkt-filter">
+              <div class="fl">WINDOW</div>
+              <select><option>Tomorrow AM</option><option>Today</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mkt-body-grid">
+          <div class="mkt-col mkt-col-left">
+            <div class="mkt-section-title"><span class="d"></span>REQUIREMENTS PARSED</div>
+            <div>
+              <div class="mkt-req-row"><div class="mkt-req-key">Location</div><div class="mkt-req-val">India</div></div>
+              <div class="mkt-req-row"><div class="mkt-req-key">Duration</div><div class="mkt-req-val">≥ 10 min</div></div>
+              <div class="mkt-req-row"><div class="mkt-req-key">Window</div><div class="mkt-req-val">Tomorrow &middot; AM</div></div>
+              <div class="mkt-req-row"><div class="mkt-req-key">Bandwidth</div><div class="mkt-req-val">≥ 20 Mbps</div></div>
+              <div class="mkt-req-row"><div class="mkt-req-key">Budget</div><div class="mkt-req-val">≤ $50 USDC</div></div>
+            </div>
+            <div class="mkt-scan-box">Scanning <b>1,240 upcoming passes</b> across 9 constellations. Geometry, timing, and price filters narrowed the field to <b>3 candidates</b>.</div>
+          </div>
+
+          <div class="mkt-col">
+            <div class="mkt-section-title"><span class="d"></span>RANKED CANDIDATES</div>
+            <div class="mkt-cand-head"><div>#</div><div>SATELLITE</div><div>PASS WINDOW</div><div>THROUGHPUT</div><div>PRICE</div><div>MATCH</div></div>
+
+            <div class="mkt-cand-row selected">
+              <div class="mkt-rank-num">01</div>
+              <div class="mkt-sat-cell"><div class="mkt-op-logo">OX</div><div><div class="mkt-sat-name">SAT-07</div><div class="mkt-op-name">ORBITEX</div></div></div>
+              <div class="mkt-cell">06:42 IST</div>
+              <div class="mkt-cell"><b>32</b> Mbps</div>
+              <div class="mkt-cell"><b>$41</b></div>
+              <div class="mkt-match"><div class="mkt-match-bar"><span style="width:98%"></span></div><div class="mkt-match-pct">98%</div></div>
+            </div>
+            <div class="mkt-cand-row">
+              <div class="mkt-rank-num">02</div>
+              <div class="mkt-sat-cell"><div class="mkt-op-logo">MR</div><div><div class="mkt-sat-name">SAT-14</div><div class="mkt-op-name">MERIDIAN SPACE</div></div></div>
+              <div class="mkt-cell">07:11 IST</div>
+              <div class="mkt-cell"><b>26</b> Mbps</div>
+              <div class="mkt-cell"><b>$38</b></div>
+              <div class="mkt-match"><div class="mkt-match-bar"><span style="width:81%"></span></div><div class="mkt-match-pct">81%</div></div>
+            </div>
+            <div class="mkt-cand-row">
+              <div class="mkt-rank-num">03</div>
+              <div class="mkt-sat-cell"><div class="mkt-op-logo">HS</div><div><div class="mkt-sat-name">SAT-02</div><div class="mkt-op-name">HELIOSAT</div></div></div>
+              <div class="mkt-cell">05:58 IST</div>
+              <div class="mkt-cell"><b>20</b> Mbps</div>
+              <div class="mkt-cell"><b>$47</b></div>
+              <div class="mkt-match"><div class="mkt-match-bar"><span style="width:74%"></span></div><div class="mkt-match-pct">74%</div></div>
+            </div>
+          </div>
+
+          <div class="mkt-col mkt-col-right">
+            <div class="mkt-section-title"><span class="d"></span>LIVE FEED</div>
+            <div id="mktFeedList">
+              <div class="mkt-feed-item ok"><b>SAT-31</b> telemetry verified<span class="t">2s ago</span></div>
+              <div class="mkt-feed-item"><b>0x8c1…2ab</b> booked SAT-19<span class="t">14s ago</span></div>
+              <div class="mkt-feed-item ok"><b>SAT-04</b> escrow released, $58<span class="t">41s ago</span></div>
+              <div class="mkt-feed-item"><b>Heliosat</b> listed 3 new windows<span class="t">1m ago</span></div>
+              <div class="mkt-feed-item"><b>0x2f9…c31</b> agent auto-booked<span class="t">2m ago</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mkt-detail-card">
+          <div class="mkt-detail-head">
+            <div><div class="tag">SELECTED WINDOW</div><div class="sat">SAT-07 <span style="color:#909097; font-weight:400;">&middot; ORBITEX</span></div></div>
+            <div class="tag">EXPIRES IN <span class="mkt-countdown">04:52</span></div>
+          </div>
+          <div class="mkt-detail-body">
+            <div class="mkt-stat"><div class="l">PASS WINDOW</div><div class="v">06:42 &ndash; 06:52 IST</div></div>
+            <div class="mkt-stat"><div class="l">THROUGHPUT AVG</div><div class="v">32 Mbps</div></div>
+            <div class="mkt-stat"><div class="l">PRICE</div><div class="v">$41.00 USDC</div></div>
+            <div class="mkt-stat"><div class="l">OPERATOR BOND</div><div class="v ok">STAKED &check;</div></div>
+          </div>
+          <div class="mkt-book-zone">
+            <div class="esc">Funds lock in escrow contract on booking &middot; released on verified delivery</div>
+            <button class="mkt-book-btn">BOOK WINDOW</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const mktModal = document.getElementById('marketplace-modal');
+    const mktClose = mktModal.querySelector('[data-close-marketplace]');
+    
+    function openMktModal(tabId) {
+      mktModal.hidden = false;
+      mktModal.classList.add('is-open');
+      document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+      const activeTab = document.getElementById('tab-' + tabId);
+      if (activeTab) activeTab.classList.add('active');
+    }
+
+    document.getElementById('marketplace-btn').addEventListener('click', (e) => { e.preventDefault(); openMktModal('marketplace'); });
+    document.getElementById('escrow-btn').addEventListener('click', (e) => { e.preventDefault(); openMktModal('escrow'); });
+    document.getElementById('telemetry-btn').addEventListener('click', (e) => { e.preventDefault(); openMktModal('telemetry'); });
+    document.getElementById('agent-btn').addEventListener('click', (e) => { e.preventDefault(); openMktModal('agent'); });
+    
+    mktClose.addEventListener('click', () => { mktModal.hidden = true; mktModal.classList.remove('is-open'); });
+    
+    document.querySelectorAll('.app-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // Live feed ticking
+    const feedEvents = [
+      ["SAT-22","telemetry verified",true],
+      ["0x5b7…91e","booked SAT-14",false],
+      ["SAT-07","escrow locked, $41",true],
+      ["Orbitex","bond top-up confirmed",false],
+      ["0x9d3…44c","agent queried 12 windows",false],
+      ["SAT-31","pass window closed",true]
+    ];
+    const feedList = document.getElementById('mktFeedList');
+    let mktLiveCount = 128;
+    setInterval(() => {
+      if(!feedList || mktModal.hidden) return;
+      const e = feedEvents[Math.floor(Math.random()*feedEvents.length)];
+      const div = document.createElement('div');
+      div.className = 'mkt-feed-item' + (e[2] ? ' ok' : '');
+      div.innerHTML = '<b>'+e[0]+'</b> '+e[1]+'<span class="t">just now</span>';
+      feedList.prepend(div);
+      if(feedList.children.length > 6) { feedList.removeChild(feedList.lastChild); }
+      mktLiveCount += (Math.random() > 0.5 ? 1 : -1);
+      const activeTab = document.querySelector('.app-tab.active .live span:last-child');
+      if(activeTab && activeTab.textContent.includes('live')) {
+        activeTab.textContent = mktLiveCount + ' live';
+      }
+    }, 3200);
+  </script>
+  
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
-
-   
     
 </body>
 </html>
