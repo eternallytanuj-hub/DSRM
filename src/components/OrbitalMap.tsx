@@ -1158,6 +1158,10 @@ setInterval(() => {
   `;
     document.body.appendChild(scriptEl);
 
+    if (typeof window !== 'undefined') {
+      (window as any).NEXT_PUBLIC_SATELLITE_API_URL = process.env.NEXT_PUBLIC_SATELLITE_API_URL || 'https://dsrmbackend-production.up.railway.app/api/v1/satellites';
+    }
+
     // Load Mapbox script
     const mapboxScript = document.createElement('script');
     mapboxScript.src = 'https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js';
