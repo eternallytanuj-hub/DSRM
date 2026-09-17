@@ -12,6 +12,7 @@ import {
   Globe, 
   Terminal 
 } from "lucide-react";
+import { WalletButton } from "@/components/WalletButton";
 import "../globals.css";
 
 const navLinks = [
@@ -40,6 +41,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <img src="/DSRM_logo.png" alt="DSRM" className="w-8 h-8 object-contain" />
             <div className="flex flex-col">
               <span className="font-semibold tracking-wide text-sm opacity-90">DSRM Network</span>
+              <span className="text-[10px] text-white/40 font-mono">ORBITAL EXCHANGE</span>
             </div>
           </Link>
 
@@ -64,10 +66,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          <div className="p-4 border-t border-white/[0.05] bg-white/[0.01]">
-            <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.05]">
-              <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)] animate-pulse" />
-              <span className="text-xs text-white/50">System Nominal</span>
+          <div className="p-4 border-t border-white/[0.05] bg-white/[0.01] space-y-3">
+            <WalletButton />
+            <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-pulse" />
+                <span className="text-xs text-white/60 font-mono">Sepolia Live</span>
+              </div>
+              <span className="text-[10px] text-white/40 font-mono">#11155111</span>
             </div>
           </div>
         </aside>
