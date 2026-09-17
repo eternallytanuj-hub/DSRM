@@ -17,6 +17,16 @@ interface Booking {
 
 const DEFAULT_BOOKINGS: Booking[] = [
   { 
+    id: 'BKG-1957', 
+    sat: 'STARLINK-32573', 
+    date: 'Sep 18, 2026', 
+    status: 'Settled', 
+    time: '07:45 - 08:00 UTC (15m)',
+    txHash: '0x829caaa2dc08adbb2c7f396f211b01fc2dc41b3f25056910547f6ac3bb55cb13',
+    etherscanUrl: 'https://sepolia.etherscan.io/tx/0x829caaa2dc08adbb2c7f396f211b01fc2dc41b3f25056910547f6ac3bb55cb13',
+    amount: '0.00001 Sepolia ETH'
+  },
+  { 
     id: 'BKG-SATNOGS-001', 
     sat: 'STARLINK-32573', 
     date: 'Sep 18, 2026', 
@@ -36,6 +46,16 @@ const DEFAULT_BOOKINGS: Booking[] = [
     etherscanUrl: 'https://sepolia.etherscan.io/tx/0x6c0b385616af57731755d79cb04e98dd265097734af6748c471847657e068f68',
     amount: '0.00010 Sepolia ETH'
   },
+  { 
+    id: 'BKG-REFUND-TEST-001', 
+    sat: 'METEOSAT-11 HRIT', 
+    date: 'Sep 18, 2026', 
+    status: 'Refunded', 
+    time: '07:30 - 07:45 UTC (15m)',
+    txHash: '0xb2e3c88bdbf83fd2d94297c526e99cac63be669e99768f86913c89de6b3c829c',
+    etherscanUrl: 'https://sepolia.etherscan.io/tx/0xb2e3c88bdbf83fd2d94297c526e99cac63be669e99768f86913c89de6b3c829c',
+    amount: '0.00005 Sepolia ETH'
+  }
 ];
 
 export default function MyBookingsPage() {
@@ -100,6 +120,8 @@ export default function MyBookingsPage() {
                   ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                   : b.status === 'Locked'
                   ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                  : b.status === 'Refunded'
+                  ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                   : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
               }`}>
                 {b.status}

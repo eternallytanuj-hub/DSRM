@@ -68,6 +68,39 @@ interface LiveFrame {
 
 const DEFAULT_ATTESTATIONS: Attestation[] = [
   {
+    id: "ATT-9376-1957",
+    sessionId: "GS-BLR-0434",
+    groundStation: "SatNOGS Ground Station #1428",
+    location: "Bangalore, IN (12.9716° N, 77.5946° E)",
+    satellite: "STARLINK-32573",
+    noradId: 58219,
+    bookingRef: "BKG-1957",
+    bookingId: "0xf5fdc2557bd1065f55b43c9494a88a342df342cb5d6983fadbdc88316c4a33a7",
+    timestamp: new Date(Date.now() - 60000).toISOString(),
+    frequency: "2245.00 MHz (S-Band Downlink)",
+    snr: "14.6 dB",
+    totalFrames: 1000,
+    validFrames: 987,
+    droppedFrames: 13,
+    frameQualityPct: 98.7,
+    status: "NOMINAL",
+    sha256Fingerprint: "0x4c1fbf4967a1b0e97a8e1103657934093dac70306d728a0ce815b0632e1a1f59",
+    oracleSignature: "0x870c4b7f70b30d634b3a750cf6b435c0dd26eb22808132c4f8f28120e7c7b2e9486b1099308587c61388952a0bcdf901a08447437dde34a351db3b7cb89d78c71c",
+    oracleAddress: "0xc25f9F0Ce27A2D248c43563a32cDC4886D069176",
+    contractAddress: "0x5CDcB7F47De1aE89A24Adb55b0876C765C437735",
+    settlement: {
+      status: "SETTLED",
+      action: "RELEASE",
+      txHash: "0x829caaa2dc08adbb2c7f396f211b01fc2dc41b3f25056910547f6ac3bb55cb13",
+      blockNumber: 11726893,
+      etherscanUrl: "https://sepolia.etherscan.io/tx/0x829caaa2dc08adbb2c7f396f211b01fc2dc41b3f25056910547f6ac3bb55cb13",
+      operatorPayout: "0.00001000 Sepolia ETH (100%)",
+      buyerRefund: "0.00000000 ETH (0%)",
+      settledAt: new Date(Date.now() - 50000).toISOString(),
+      gasUsed: "102,211"
+    }
+  },
+  {
     id: "ATT-9842-BKG1",
     sessionId: "GS-BLR-0182",
     groundStation: "SatNOGS Ground Station #1428",
@@ -131,6 +164,39 @@ const DEFAULT_ATTESTATIONS: Attestation[] = [
       buyerRefund: "0.00001600 Sepolia ETH (16%)",
       settledAt: new Date(Date.now() - 90000).toISOString(),
       gasUsed: "123,491"
+    }
+  },
+  {
+    id: "ATT-4219-BKG3",
+    sessionId: "GS-REDU-0341",
+    groundStation: "ESA Redu Station",
+    location: "Redu, BE (50.0016° N, 5.1461° E)",
+    satellite: "METEOSAT-11",
+    noradId: 40732,
+    bookingRef: "BKG-REFUND-TEST-001",
+    bookingId: "0x421ce01e5b3bcd4856a05f35d0b26e5e442f825d0e06920110f88b5264e916f9",
+    timestamp: new Date(Date.now() - 40000).toISOString(),
+    frequency: "1675.00 MHz (Raw Telemetry)",
+    snr: "4.1 dB",
+    totalFrames: 1000,
+    validFrames: 0,
+    droppedFrames: 1000,
+    frameQualityPct: 0.0,
+    status: "BREACH",
+    sha256Fingerprint: "0x421ce01e5b3bcd4856a05f35d0b26e5e442f825d0e06920110f88b5264e916f9",
+    oracleSignature: "0x7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e1c",
+    oracleAddress: "0xc25f9F0Ce27A2D248c43563a32cDC4886D069176",
+    contractAddress: "0x5CDcB7F47De1aE89A24Adb55b0876C765C437735",
+    settlement: {
+      status: "REFUNDED",
+      action: "REFUND",
+      txHash: "0xb2e3c88bdbf83fd2d94297c526e99cac63be669e99768f86913c89de6b3c829c",
+      blockNumber: 11726880,
+      etherscanUrl: "https://sepolia.etherscan.io/tx/0xb2e3c88bdbf83fd2d94297c526e99cac63be669e99768f86913c89de6b3c829c",
+      operatorPayout: "0.00000000 ETH (0%)",
+      buyerRefund: "0.00005000 Sepolia ETH (100%)",
+      settledAt: new Date(Date.now() - 30000).toISOString(),
+      gasUsed: "48,932"
     }
   }
 ];
@@ -236,7 +302,8 @@ export default function TelemetryOraclePage() {
         body: JSON.stringify({
           satellite: "STARLINK-32573",
           groundStation: "SatNOGS Ground Station #1428 (Bangalore)",
-          packetDeliveryPct: 98.9
+          packetDeliveryPct: +(96.5 + Math.random() * 3.0).toFixed(1),
+          doOnChainSettlement: true
         })
       });
       if (res.ok) {
@@ -244,45 +311,14 @@ export default function TelemetryOraclePage() {
         if (data && data.attestation) {
           setAttestations(prev => [data.attestation, ...prev]);
         }
+      } else {
+        console.error("Trigger pass failed:", await res.text());
       }
-    } catch {
-      // Local simulation
-      const newAtt: Attestation = {
-        id: `ATT-${Math.floor(1000 + Math.random() * 9000)}-SIM`,
-        sessionId: `GS-SIM-${Math.floor(100 + Math.random() * 900)}`,
-        groundStation: "SatNOGS Ground Station #1428 - Bangalore",
-        location: "Bangalore, IN (12.9716° N, 77.5946° E)",
-        satellite: "STARLINK-32573",
-        noradId: 58219,
-        bookingRef: `BKG-SIM-${Date.now().toString(36).toUpperCase()}`,
-        bookingId: "0x" + Math.floor(Math.random() * 1e16).toString(16).padEnd(64, 'a'),
-        timestamp: new Date().toISOString(),
-        frequency: "2245.00 MHz (S-Band)",
-        snr: "15.1 dB",
-        totalFrames: 1000,
-        validFrames: 989,
-        droppedFrames: 11,
-        frameQualityPct: 98.9,
-        status: "NOMINAL",
-        sha256Fingerprint: "0x7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b",
-        oracleSignature: "0x9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e1c",
-        oracleAddress: SatelliteEscrowArtifact.oracleAddress || "0xc25f9F0Ce27A2D248c43563a32cDC4886D069176",
-        contractAddress: SatelliteEscrowArtifact.address,
-        settlement: {
-          status: "SETTLED",
-          action: "RELEASE",
-          txHash: "0x6635c7a647877a781e01af6a231226282500291a0f91405503881e4113c7b359",
-          blockNumber: 11726829,
-          etherscanUrl: "https://sepolia.etherscan.io/tx/0x6635c7a647877a781e01af6a231226282500291a0f91405503881e4113c7b359",
-          operatorPayout: "0.00010000 Sepolia ETH (100%)",
-          buyerRefund: "0.00000000 ETH (0%)",
-          settledAt: new Date().toISOString(),
-          gasUsed: "121,776"
-        }
-      };
-      setAttestations(prev => [newAtt, ...prev]);
+    } catch (err) {
+      console.error("Simulation error:", err);
+    } finally {
+      setIsSimulating(false);
     }
-    setIsSimulating(false);
   };
 
   return (

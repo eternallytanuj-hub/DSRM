@@ -110,8 +110,22 @@ export default function MarketplacePage() {
           etherscanUrl: `https://sepolia.etherscan.io/tx/${txHash}`,
         });
         localStorage.setItem('dsrm_user_bookings', JSON.stringify(stored));
+
+        // Register booking with the automated Oracle Relayer service
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+        fetch(`${backendUrl}/api/v1/telemetry/register-booking`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            bookingRef,
+            bookingId,
+            satellite: p.name,
+            operator: operatorAddress,
+            txHash
+          })
+        }).catch(() => {});
       } catch (err) {
-        console.error("Storage error:", err);
+        console.error("Storage/Relayer error:", err);
       }
 
       setLockedModal(modalData);

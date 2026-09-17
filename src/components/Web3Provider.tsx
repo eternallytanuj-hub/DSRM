@@ -3,7 +3,7 @@
 import React from 'react';
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
-import { WagmiProvider, http } from 'wagmi';
+import { WagmiProvider, http, fallback } from 'wagmi';
 import { sepolia } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -12,7 +12,11 @@ export const wagmiConfig = getDefaultConfig({
   projectId: 'c4f79cc821944d9680842e34466bfbd4',
   chains: [sepolia],
   transports: {
-    [sepolia.id]: http('https://ethereum-sepolia-rpc.publicnode.com'),
+    [sepolia.id]: fallback([
+      http('https://ethereum-sepolia-rpc.publicnode.com'),
+      http('https://1rpc.io/sepolia'),
+      http('https://rpc.sepolia.org'),
+    ]),
   },
   ssr: true,
 });

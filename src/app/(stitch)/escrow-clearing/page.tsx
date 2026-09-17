@@ -21,7 +21,7 @@ interface EscrowItem {
   bookingId: string;
   target: string;
   amount: string;
-  status: 'Locked' | 'Released' | 'Partially Settled';
+  status: 'Locked' | 'Released' | 'Partially Settled' | 'Refunded';
   depositTx: string;
   settleTx?: string;
   window: string;
@@ -31,6 +31,19 @@ interface EscrowItem {
 }
 
 const DEFAULT_ESCROWS: EscrowItem[] = [
+  {
+    id: 'BKG-1957',
+    bookingId: '0xf5fdc2557bd1065f55b43c9494a88a342df342cb5d6983fadbdc88316c4a33a7',
+    target: 'STARLINK-32573',
+    amount: '0.00001 Sepolia ETH',
+    status: 'Released',
+    depositTx: '0x7db2377788d89b82b1558e6f76b97ad53394d22394b8ea3d5451f41369ab8454',
+    settleTx: '0x829caaa2dc08adbb2c7f396f211b01fc2dc41b3f25056910547f6ac3bb55cb13',
+    window: '07:45 - 08:00 UTC (15m)',
+    quality: '98.7% (Passed ≥95% Threshold)',
+    payout: '0.00001000 ETH (100%)',
+    refund: '0.00000000 ETH (0%)'
+  },
   {
     id: 'BKG-SATNOGS-001',
     bookingId: '0x99820bf9f502f87f32fc1fe27239b50bd76d63824b3567b3a15729655c3993a7',
@@ -56,6 +69,19 @@ const DEFAULT_ESCROWS: EscrowItem[] = [
     quality: '84.0% (Atmospheric Packet Loss)',
     payout: '0.00008400 ETH (84%)',
     refund: '0.00001600 ETH (16% Buyer Refund)'
+  },
+  {
+    id: 'BKG-REFUND-TEST-001',
+    bookingId: '0x421ce01e5b3bcd4856a05f35d0b26e5e442f825d0e06920110f88b5264e916f9',
+    target: 'METEOSAT-11 HRIT',
+    amount: '0.00005 Sepolia ETH',
+    status: 'Refunded',
+    depositTx: '0xcfd0432b7e929db5ce744ad49281bd464c768dcd584b9411fad6f46f229cdf87',
+    settleTx: '0xb2e3c88bdbf83fd2d94297c526e99cac63be669e99768f86913c89de6b3c829c',
+    window: '07:30 - 07:45 UTC (15m)',
+    quality: '0.0% (Atmospheric Blackout - Full Refund)',
+    payout: '0.00000000 ETH (0%)',
+    refund: '0.00005000 ETH (100% Buyer Refund)'
   }
 ];
 
@@ -184,6 +210,8 @@ export default function EscrowClearingPage() {
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : e.status === 'Partially Settled'
                         ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        : e.status === 'Refunded'
+                        ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
                         : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
                     }`}>
                       {e.status}
@@ -199,6 +227,8 @@ export default function EscrowClearingPage() {
                     ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' 
                     : e.status === 'Partially Settled'
                     ? 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+                    : e.status === 'Refunded'
+                    ? 'bg-rose-500/10 border-rose-500/20 text-rose-400'
                     : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                 }`}>
                   {e.status === 'Locked' ? <Lock className="w-5 h-5" /> : <Unlock className="w-5 h-5" />}
@@ -213,6 +243,8 @@ export default function EscrowClearingPage() {
                       ? 'w-1/2 bg-blue-500/60' 
                       : e.status === 'Partially Settled'
                       ? 'w-[84%] bg-amber-500/80'
+                      : e.status === 'Refunded'
+                      ? 'w-full bg-rose-500/80'
                       : 'w-full bg-emerald-500/80'
                   }`} 
                 />
