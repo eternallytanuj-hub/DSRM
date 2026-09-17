@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, Satellite, Clock, Wifi, Sparkles, Radio, Globe2, ShieldCheck } from 'lucide-react';
+import { Search, Satellite, Clock, Wifi, Cpu, Radio, Globe2, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 import { searchMarketplaceWithGroq } from './actions';
@@ -101,8 +101,8 @@ export default function MarketplacePage() {
               </>
             ) : (
               <>
-                <Sparkles size={14} className="text-amber-300" />
-                <span>AI Match</span>
+                <Cpu size={14} className="text-white/80" />
+                <span>Match Orbit</span>
               </>
             )}
           </button>
@@ -155,7 +155,7 @@ export default function MarketplacePage() {
               {/* AI Recommendation Reason */}
               {p.reason && (
                 <div className="mb-4 p-3 rounded-2xl bg-emerald-500/[0.08] border border-emerald-500/20 text-emerald-300 text-xs leading-relaxed flex items-start gap-2">
-                  <Sparkles size={14} className="text-emerald-400 shrink-0 mt-0.5" />
+                  <Radio size={14} className="text-emerald-400 shrink-0 mt-0.5" />
                   <span>{p.reason}</span>
                 </div>
               )}

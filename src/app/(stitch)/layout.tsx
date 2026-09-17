@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { 
+  Home,
   ShoppingCart, 
   Calendar, 
   ShieldCheck, 
@@ -14,6 +15,7 @@ import {
 import "../globals.css";
 
 const navLinks = [
+  { href: "/", label: "Back to Home", icon: Home },
   { href: "/marketplace", label: "Marketplace", icon: ShoppingCart },
   { href: "/my-bookings", label: "My Bookings", icon: Calendar },
   { href: "/escrow-clearing", label: "Escrow & Clearing", icon: ShieldCheck },
@@ -34,14 +36,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <div className="flex h-screen overflow-hidden">
         <aside className="w-64 flex-shrink-0 flex flex-col backdrop-blur-2xl bg-white/[0.02] border-r border-white/[0.05] relative z-10">
-          <div className="p-6 flex items-center gap-3 border-b border-white/[0.05]">
+          <Link href="/" className="p-6 flex items-center gap-3 border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors group">
             <img src="/DSRM_logo.png" alt="DSRM" className="w-8 h-8 object-contain" />
-            <span className="font-semibold tracking-wide text-sm opacity-90">DSRM Network</span>
-          </div>
+            <div className="flex flex-col">
+              <span className="font-semibold tracking-wide text-sm opacity-90">DSRM Network</span>
+            </div>
+          </Link>
 
           <nav className="flex-1 py-6 px-3 space-y-1 overflow-y-auto">
             {navLinks.map((item) => {
-              const active = pathname.startsWith(item.href);
+              const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
               const Icon = item.icon;
               return (
                 <Link
