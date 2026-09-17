@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary":"#3c0091","background":"#11131c","status-nominal-surface":"rgba(6, 78, 59, 0.2)","text-tertiary":"#5A6275","secondary-fixed":"#6ffbbe","text-secondary":"#9BA3B8","outline":"#8c909f","inverse-surface":"#e1e1ef","surface-container-low":"#191b25","error-container":"#93000a","inverse-on-surface":"#2e303a","surface-panel":"#0D0F18","tertiary-fixed":"#e9ddff","surface-container-lowest":"#0c0e17","on-primary-fixed-variant":"#004395","status-pending":"#F59E0B","surface-container-high":"#282933","border-active":"#384259","surface-dim":"#11131c","on-secondary-container":"#00311f","secondary":"#4edea3","canvas-base":"#07080C","status-pending-surface":"rgba(120, 53, 15, 0.2)","surface-inset":"#131622","primary":"#adc6ff","on-tertiary-container":"#340080","surface-tint":"#adc6ff","status-active":"#3B82F6","primary-container":"#4d8eff","border-default":"#1F2433","on-primary":"#002e6a","on-background":"#e1e1ef","tertiary-container":"#a078ff","inverse-primary":"#005ac2","on-tertiary-fixed":"#23005c","on-secondary-fixed":"#002113","status-nominal":"#10B981","tertiary":"#d0bcff","error":"#ffb4ab","surface":"#11131c","status-active-surface":"rgba(30, 58, 138, 0.2)","primary-fixed-dim":"#adc6ff","on-primary-container":"#00285d","on-error-container":"#ffdad6","on-surface":"#e1e1ef","surface-bright":"#373943","status-breach":"#EF4444","hash-spectral":"#8B5CF6","secondary-fixed-dim":"#4edea3","text-primary":"#F0F3F8","on-secondary":"#003824","on-error":"#690005","surface-container":"#1d1f29","on-tertiary-fixed-variant":"#5516be","surface-container-highest":"#32343e","secondary-container":"#00a572","on-secondary-fixed-variant":"#005236","status-breach-surface":"rgba(127, 29, 29, 0.2)","tertiary-fixed-dim":"#d0bcff","outline-variant":"#424754","primary-fixed":"#d8e2ff","on-primary-fixed":"#001a42","surface-variant":"#32343e","on-surface-variant":"#c2c6d6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-desktop":"1rem","space-lg":"0.75rem","space-md":"0.5rem","space-xs":"0.25rem","space-sm":"0.375rem","gutter":"0.5rem","space-xl":"1rem","margin":"0.5rem","gutter-desktop":"0.75rem"},"fontFamily":{"body-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"label-sm":["JetBrains Mono"],"body-md":["Inter"],"code-md":["JetBrains Mono"],"label-lg":["JetBrains Mono"],"headline-sm":["Inter"],"label-md":["JetBrains Mono"],"headline-lg":["Inter"],"code-sm":["JetBrains Mono"]},"fontSize":{"body-lg":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"500"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"code-md":["12px",{"lineHeight":"16px","fontWeight":"400"}],"label-lg":["13px",{"lineHeight":"18px","fontWeight":"500"}],"headline-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.03em","fontWeight":"500"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-sm":["11px",{"lineHeight":"14px","fontWeight":"400"}]}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-canvas-base text-text-primary font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-panel border-b border-border-default"><div class="h-10 px-margin-desktop flex items-center justify-between border-b border-border-default bg-surface-panel"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-status-active text-headline-sm">satellite_alt</span><span class="font-label-md text-label-md tracking-wider text-text-primary font-semibold">DSRM // ORBITAL ACCESS EXCHANGE</span><span class="px-space-xs py-0 text-label-sm font-label-sm border border-border-default bg-surface-inset text-text-secondary">CLEARING v2.4</span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">NET:</span><span class="text-text-secondary">SEPOLIA ETH</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">CONTRACT:</span><span class="font-code-sm text-code-sm text-primary">0x7f9a...4B12</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">SatNOGS ACTIVE:</span><span class="text-text-primary font-code-sm">418 ACTIVE</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">CHAINLINK DON:</span><span class="text-status-nominal font-code-sm">5/7 CONSENSUS</span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-code-sm text-code-sm bg-surface-inset px-space-sm py-0.5 border border-border-default"><span class="text-text-tertiary">UTC</span><span class="text-text-primary tracking-widest font-semibold">2025.04.12 18:42:09.841</span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">MULTI-SIG:</span><span class="text-status-nominal font-code-sm">3/5 SECURE</span></div><div class="flex items-center gap-space-xs font-code-sm text-code-sm bg-surface-inset px-space-sm py-0.5 border border-border-default text-text-secondary"><span class="text-text-tertiary">WALLET:</span><span class="text-primary font-code-sm">0x4f2a...9c1e</span></div></div></div><div class="h-9 px-margin-desktop flex items-center justify-between bg-surface-inset"><nav class="flex items-center h-full gap-0" data-active-classes="bg-surface-panel text-primary border-b-2 border-primary"><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="marketplace" href="#">MARKETPLACE (112 LIVE PASSES)</a><a aria-current="page" class="h-full px-space-lg flex items-center font-label-md transition-none bg-surface-panel text-primary border-b-2 border-primary" data-path="my-bookings" href="#">MY BOOKINGS (3 ACTIVE)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="escrow-clearing" href="#">ESCROW & CLEARING (LIVE VERIFIED SETTLEMENT)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="telemetry-oracle" href="#">TELEMETRY ORACLE (SatNOGS / NOAA INGEST)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="operator-registry" href="#">OPERATOR REGISTRY (FCC / ITU VERIFIED)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="api-smart-contract" href="#">API & SMART CONTRACT (CHAINLINK FUNCTIONS)</a></nav><div class="flex items-center gap-space-sm text-label-sm font-label-sm"><span class="text-text-tertiary">CHANNEL:</span><span class="text-status-nominal font-code-sm">SECURE LINK E2EE</span></div></div></header><aside class="fixed left-0 top-[76px] bottom-7 w-64 bg-surface-panel border-r border-border-default z-40 flex flex-col justify-between"><div class="p-space-md border-b border-border-default"><div class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider mb-space-xs">Terminal Ops Module</div><div class="flex items-center justify-between"><span class="font-headline-sm text-headline-sm text-text-primary">FLIGHT COCKPIT</span><span class="h-2 w-2 bg-status-nominal animate-pulse"></span></div></div><div class="flex-1 py-space-sm px-space-xs overflow-y-auto space-y-0.5"><div class="px-space-sm py-space-xs font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Settlement Ops</div><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="marketplace" href="#"><span class="material-symbols-outlined text-headline-sm">swap_horiz</span><span>Pass Spot Market</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="my-bookings" href="#"><span class="material-symbols-outlined text-headline-sm">book_online</span><span>Committed Slots</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="escrow-clearing" href="#"><span class="material-symbols-outlined text-headline-sm">currency_exchange</span><span>Escrow Execution</span></a><div class="pt-space-md px-space-sm py-space-xs font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Oracle Verification</div><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="telemetry-oracle" href="#"><span class="material-symbols-outlined text-headline-sm">radar</span><span>SatNOGS RF Passes</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="operator-registry" href="#"><span class="material-symbols-outlined text-headline-sm">verified_user</span><span>FCC IBFS Registrations</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="api-smart-contract" href="#"><span class="material-symbols-outlined text-headline-sm">terminal</span><span>Chainlink Functions</span></a></div><div class="p-space-sm border-t border-border-default bg-surface-inset"><div class="flex items-center justify-between font-label-sm text-label-sm mb-space-xs"><span class="text-text-tertiary">DON PEERS:</span><span class="text-text-primary font-code-sm">7 ONLINE</span></div><div class="flex items-center justify-between font-label-sm text-label-sm"><span class="text-text-tertiary">MERKLE ROOT:</span><span class="text-hash-spectral font-code-sm">0x91F8...6E</span></div></div></aside><div class="pl-64"><main class="relative pt-[76px] pb-7 w-full min-h-screen bg-canvas-base"><div class="flex flex-col w-full">
+<!-- Sub-Header Status Ribbon -->
+<div class="w-full bg-surface-container-lowest px-space-xl py-space-xs flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-widest">MODULE:</span>
+<span class="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">BOOKINGS_LEDGER_v2.41</span>
+<span class="text-text-tertiary">/</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase">EPOCH 941 // SYNCED</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary">LEDGER PROOF:</span>
+<span class="font-code-sm text-code-sm text-hash-spectral">0x7c9a...31b2</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary">AUTO-SETTLE:</span>
+<span class="font-label-sm text-label-sm text-status-nominal uppercase font-semibold">ENABLED</span>
+</div>
+</div>
+</div>
+<!-- Primary Metric Strip -->
+<div class="grid grid-cols-5 gap-space-xs p-space-md bg-canvas-base">
+<!-- Stat 1 -->
+<div class="bg-surface-panel p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">ACTIVE COMMITTED PASSES</span>
+<span class="material-symbols-outlined text-headline-sm text-status-active">satellite_alt</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-label-lg text-headline-lg font-bold text-text-primary tracking-tight">3</span>
+<span class="font-code-sm text-code-sm text-status-active uppercase">SLOTS ALLOCATED</span>
+</div>
+<div class="mt-space-xs w-full bg-surface-inset h-1 overflow-hidden">
+<div class="bg-status-active h-full w-[60%]"></div>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="bg-surface-panel p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">TOTAL CAPITAL IN ESCROW</span>
+<span class="material-symbols-outlined text-headline-sm text-status-pending">lock_clock</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-label-lg text-headline-lg font-bold text-text-primary tracking-tight">$18,420.00</span>
+<span class="font-code-sm text-code-sm text-text-secondary">USDC</span>
+</div>
+<div class="mt-space-xs flex items-center justify-between font-label-sm text-label-sm text-text-tertiary">
+<span>SEPOLIA CONTRACT</span>
+<span class="text-status-nominal">VERIFIED 100%</span>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="bg-surface-panel p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">COMPLETED PASSES</span>
+<span class="material-symbols-outlined text-headline-sm text-status-nominal">task_alt</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-label-lg text-headline-lg font-bold text-text-primary tracking-tight">48</span>
+<span class="font-code-sm text-code-sm text-text-secondary">ALL-TIME SLOTS</span>
+</div>
+<div class="mt-space-xs flex items-center justify-between font-label-sm text-label-sm text-text-tertiary">
+<span>SETTLEMENT TOTAL</span>
+<span class="text-text-secondary">$142,880.00</span>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="bg-surface-panel p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">SLA RELIABILITY SCORE</span>
+<span class="material-symbols-outlined text-headline-sm text-status-nominal">verified</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-label-lg text-headline-lg font-bold text-status-nominal tracking-tight">99.82%</span>
+<span class="font-code-sm text-code-sm text-status-nominal font-semibold">Q4 RANK A+</span>
+</div>
+<div class="mt-space-xs w-full bg-surface-inset h-1 overflow-hidden">
+<div class="bg-status-nominal h-full w-[99.82%]"></div>
+</div>
+</div>
+<!-- Stat 5 -->
+<div class="bg-surface-panel p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">UNCLAIMED ESCROW REFUNDS</span>
+<span class="material-symbols-outlined text-headline-sm text-text-tertiary">savings</span>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-label-lg text-headline-lg font-bold text-text-primary tracking-tight">$0.00</span>
+<span class="font-code-sm text-code-sm text-text-tertiary">NO SURPLUS</span>
+</div>
+<div class="mt-space-xs flex items-center justify-between font-label-sm text-label-sm text-text-tertiary">
+<span>TREASURY SWEEP</span>
+<span class="text-text-secondary">AUTO-REBALANCED</span>
+</div>
+</div>
+</div>
+<!-- Main Multi-Pane Cockpit -->
+<div class="grid grid-cols-12 gap-space-xs p-space-md pt-0 bg-canvas-base">
+<!-- Ledger & Bookings Primary Column (8 Cols) -->
+<div class="col-span-8 flex flex-col gap-space-xs">
+<!-- Filter Bar & Control Tabs -->
+<div class="bg-surface-panel flex items-center justify-between px-space-md py-space-xs">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm">
+<button class="bg-surface-inset text-primary px-space-md py-1 font-semibold uppercase flex items-center gap-space-xs">
+<span>ALL BOOKINGS</span>
+<span class="bg-surface-container-high px-1 text-primary-fixed">51</span>
+</button>
+<button class="bg-surface-panel hover:bg-surface-inset text-text-secondary hover:text-text-primary px-space-md py-1 uppercase flex items-center gap-space-xs">
+<span>ACTIVE / IN ESCROW</span>
+<span class="bg-status-active-surface text-status-active px-1 font-bold">3</span>
+</button>
+<button class="bg-surface-panel hover:bg-surface-inset text-text-secondary hover:text-text-primary px-space-md py-1 uppercase flex items-center gap-space-xs">
+<span>PENDING QUORUM</span>
+<span class="bg-status-pending-surface text-status-pending px-1">1</span>
+</button>
+<button class="bg-surface-panel hover:bg-surface-inset text-text-secondary hover:text-text-primary px-space-md py-1 uppercase flex items-center gap-space-xs">
+<span>SETTLED / ARCHIVED</span>
+<span class="bg-surface-container-low text-text-tertiary px-1">47</span>
+</button>
+</div>
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm">
+<div class="flex items-center gap-space-xs bg-surface-inset px-space-sm py-1">
+<span class="material-symbols-outlined text-body-sm text-text-tertiary">search</span>
+<input class="bg-transparent text-text-primary font-code-sm text-code-sm outline-none placeholder:text-text-tertiary w-44" placeholder="FILTER PASS ID / SAT / HASH..." type="text"/>
+</div>
+<button class="bg-surface-inset hover:bg-surface-container-high text-text-secondary hover:text-text-primary px-space-sm py-1 flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-body-sm">tune</span>
+<span>CRITERIA</span>
+</button>
+</div>
+</div>
+<!-- Bookings Ledger Container -->
+<div class="bg-surface-panel flex flex-col">
+<!-- Table Column Headers -->
+<div class="grid grid-cols-12 bg-surface-inset px-space-md py-space-xs font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider items-center">
+<div class="col-span-2">PASS IDENTIFIER</div>
+<div class="col-span-2">TARGET / ORBIT</div>
+<div class="col-span-2">BAND & THROUGHPUT</div>
+<div class="col-span-2">TIME WINDOW (UTC)</div>
+<div class="col-span-1 text-right">ESCROW</div>
+<div class="col-span-3 text-right">CLEARING LIFECYCLE & STATE</div>
+</div>
+<!-- Row 1: #OA-1042 (Selected / In Focus) -->
+<div class="grid grid-cols-12 px-space-md py-space-sm bg-surface-panel hover:bg-surface-inset items-center cursor-pointer transition-none bg-surface-container-lowest">
+<div class="col-span-2 flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm font-bold text-primary">#OA-1042</span>
+<span class="h-1.5 w-1.5 bg-status-active"></span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">TX: 0x9e1...55da</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-text-primary">SAT-07 (ORBITEX)</span>
+<span class="font-code-sm text-label-sm text-text-secondary">LEO 550km · INC 97.4°</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-primary">S-Band 50 Mbps</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">RHCP · 2245.50 MHz</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-primary">18:41:00 - 18:52:14</span>
+<span class="font-label-sm text-label-sm text-status-pending">ACTIVE PASS DURATION (11m 14s)</span>
+</div>
+<div class="col-span-1 text-right flex flex-col items-end">
+<span class="font-code-sm text-body-sm font-semibold text-text-primary">$12,500.00</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">USDC</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-space-xs">
+<div class="bg-status-pending-surface px-space-xs py-0.5 flex items-center gap-space-xs">
+<span class="h-1.5 w-1.5 bg-status-pending animate-ping"></span>
+<span class="font-label-sm text-label-sm text-status-pending font-bold tracking-wider">FUNDS LOCKED // TELEMETRY QUORUM RATIFICATION</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-status-active text-canvas-base px-space-sm py-0.5 font-label-sm text-label-sm font-bold uppercase hover:bg-primary">INSPECT CLEARING</button>
+<button class="bg-status-breach-surface text-status-breach hover:bg-status-breach hover:text-canvas-base px-space-sm py-0.5 font-label-sm text-label-sm font-semibold uppercase">DISPUTE</button>
+</div>
+</div>
+</div>
+<!-- Row 2: #OA-1039 (Settled) -->
+<div class="grid grid-cols-12 px-space-md py-space-sm bg-surface-panel hover:bg-surface-inset items-center cursor-pointer transition-none">
+<div class="col-span-2 flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm font-bold text-text-secondary">#OA-1039</span>
+<span class="h-1.5 w-1.5 bg-status-nominal"></span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">TX: 0x82f...41a</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-text-primary">METEOSAT-X (MERIDIAN)</span>
+<span class="font-code-sm text-label-sm text-text-secondary">LEO 480km · INC 53.0°</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-primary">X-Band 150 Mbps</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">LHCP · 8410.00 MHz</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-secondary">14:10:00 - 14:21:30</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">ELAPSED 4H 20M AGO</span>
+</div>
+<div class="col-span-1 text-right flex flex-col items-end">
+<span class="font-code-sm text-body-sm font-semibold text-text-primary">$4,200.00</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">USDC</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-space-xs">
+<div class="bg-status-nominal-surface px-space-xs py-0.5 flex items-center gap-space-xs">
+<span class="h-1.5 w-1.5 bg-status-nominal"></span>
+<span class="font-label-sm text-label-sm text-status-nominal font-bold tracking-wider">COMPLETED // PAYMENT RELEASED</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-surface-inset text-text-secondary hover:text-text-primary px-space-sm py-0.5 font-label-sm text-label-sm uppercase flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-label-sm">download</span>
+<span>IPFS CAR</span>
+</button>
+<button class="bg-surface-inset text-text-secondary hover:text-text-primary px-space-sm py-0.5 font-label-sm text-label-sm uppercase flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-label-sm">policy</span>
+<span>AUDIT TRAIL</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Row 3: #OA-1035 (Slashed / Dispute Resolved) -->
+<div class="grid grid-cols-12 px-space-md py-space-sm bg-surface-panel hover:bg-surface-inset items-center cursor-pointer transition-none">
+<div class="col-span-2 flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm font-bold text-text-secondary">#OA-1035</span>
+<span class="h-1.5 w-1.5 bg-status-breach"></span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">TX: 0x31a...00cf</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-text-primary">POLARIS-RAD-01</span>
+<span class="font-code-sm text-label-sm text-text-secondary">SSO 620km · INC 98.2°</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-primary">Ka-Band 200 Mbps</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">LHCP · 26.50 GHz</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-secondary">11:00:00 - 11:15:00</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">ELAPSED 7H 31M AGO</span>
+</div>
+<div class="col-span-1 text-right flex flex-col items-end">
+<span class="font-code-sm text-body-sm font-semibold text-text-secondary line-through">$1,720.00</span>
+<span class="font-label-sm text-label-sm text-status-nominal">REFUNDED</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-space-xs">
+<div class="bg-status-breach-surface px-space-xs py-0.5 flex items-center gap-space-xs">
+<span class="h-1.5 w-1.5 bg-status-breach"></span>
+<span class="font-label-sm text-label-sm text-status-breach font-bold tracking-wider">DISPUTE RESOLVED // 100% REFUNDED (RF Drop)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-status-breach-surface text-status-breach hover:bg-status-breach hover:text-canvas-base px-space-sm py-0.5 font-label-sm text-label-sm uppercase flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-label-sm">warning</span>
+<span>VIEW SLASHER EVENT</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Row 4: Historical Context Filler -->
+<div class="grid grid-cols-12 px-space-md py-space-sm bg-surface-panel hover:bg-surface-inset items-center opacity-60">
+<div class="col-span-2 flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-sm text-code-sm text-text-secondary">#OA-1028</span>
+<span class="h-1.5 w-1.5 bg-status-nominal"></span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">TX: 0x11b...a94c</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-body-sm text-body-sm text-text-primary">SENTINEL-RF4</span>
+<span class="font-code-sm text-label-sm text-text-secondary">LEO 690km · POLAR</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-primary">X-Band 100 Mbps</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">RHCP · 8200.00 MHz</span>
+</div>
+<div class="col-span-2 flex flex-col">
+<span class="font-code-sm text-body-sm text-text-secondary">06:22:10 - 06:31:05</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">YESTERDAY</span>
+</div>
+<div class="col-span-1 text-right flex flex-col items-end">
+<span class="font-code-sm text-body-sm text-text-secondary">$3,850.00</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">USDC</span>
+</div>
+<div class="col-span-3 flex flex-col items-end gap-space-xs">
+<div class="bg-surface-inset px-space-xs py-0.5">
+<span class="font-label-sm text-label-sm text-text-secondary font-mono tracking-wider">SETTLED // VERIFIED BY 7/7 NODES</span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">PAYMENT RELEASED IN BLOCK #6,889,102</span>
+</div>
+</div>
+</div>
+<!-- Orbital Asset Visual Graphic & Observation Ground Stations -->
+<div class="bg-surface-panel p-space-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-md text-label-md uppercase text-text-primary font-bold">
+<span class="material-symbols-outlined text-headline-sm text-primary">public</span>
+<span>GROUND TRACK & DOWNLINK FOOTPRINT CONE // PASS #OA-1042</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-tertiary">SGP4 PROPAGATOR V4.1.2</span>
+</div>
+<div class="grid grid-cols-3 gap-space-sm">
+<!-- Orbital Pass Overhead Visualization -->
+<div class="col-span-2 bg-canvas-base p-space-sm relative overflow-hidden flex flex-col justify-between h-44">
+<!-- Simulated Coordinate Grid Vector Map -->
+<svg class="absolute inset-0 w-full h-full opacity-20 text-text-tertiary" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="20" id="grid" patternunits="userSpaceOnUse" width="20">
+<path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" stroke-width="0.5"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+<line stroke="currentColor" stroke-dasharray="4,4" stroke-width="1" x1="0" x2="100%" y1="50%" y2="50%"></line>
+<line stroke="currentColor" stroke-dasharray="4,4" stroke-width="1" x1="50%" x2="50%" y1="0" y2="100%"></line>
+</svg>
+<!-- Orbital Path Spline -->
+<svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+<path d="M 10 140 Q 180 20, 480 90" fill="none" stroke="#3B82F6" stroke-width="2"></path>
+<!-- Sat Position -->
+<circle cx="280" cy="55" fill="#adc6ff" r="4"></circle>
+<circle class="animate-ping" cx="280" cy="55" fill="none" r="14" stroke="#adc6ff" stroke-opacity="0.4" stroke-width="1"></circle>
+<!-- Footprint Radii -->
+<ellipse cx="280" cy="80" fill="none" opacity="0.6" rx="90" ry="35" stroke="#3B82F6" stroke-dasharray="2,2" stroke-width="1"></ellipse>
+<!-- GS Marker 1 -->
+<rect fill="#10B981" height="4" width="4" x="240" y="70"></rect>
+<!-- GS Marker 2 -->
+<rect fill="#10B981" height="4" width="4" x="295" y="85"></rect>
+<!-- GS Marker 3 -->
+<rect fill="#10B981" height="4" width="4" x="210" y="65"></rect>
+<!-- GS Marker 4 -->
+<rect fill="#10B981" height="4" width="4" x="330" y="75"></rect>
+</svg>
+<div class="relative z-10 flex items-center justify-between font-label-sm text-label-sm text-text-tertiary">
+<span>SUBCIRCULAR LEO TRACE // LAT: +37.7749° | LON: -122.4194°</span>
+<span class="text-status-active font-code-sm">IN-VIEW: T-02M 18S REMAINING</span>
+</div>
+<div class="relative z-10 flex items-center justify-between font-code-sm text-code-sm bg-surface-inset/80 p-space-xs">
+<span class="text-text-secondary">ELEVATION: <strong class="text-text-primary">64.2° MAX</strong></span>
+<span class="text-text-secondary">AZIMUTH: <strong class="text-text-primary">178.4° SSE</strong></span>
+<span class="text-text-secondary">RANGE: <strong class="text-text-primary">742.8 km</strong></span>
+<span class="text-text-secondary">SLANT LOSS: <strong class="text-text-primary">-168.4 dB</strong></span>
+</div>
+</div>
+<!-- Ground Station Swarm Health Status -->
+<div class="col-span-1 bg-surface-inset p-space-sm flex flex-col justify-between">
+<div>
+<div class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider mb-space-xs">DON QUORUM GROUND RECEIVERS</div>
+<div class="space-y-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-secondary">SatNOGS #1488 (SF)</span>
+<span class="text-status-nominal font-code-sm">LOCK 98.4%</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-secondary">SatNOGS #2104 (BLDR)</span>
+<span class="text-status-nominal font-code-sm">LOCK 99.1%</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-secondary">SatNOGS #0992 (SVAL)</span>
+<span class="text-status-nominal font-code-sm">LOCK 94.7%</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-secondary">NOAA-GS #4 (GOLD)</span>
+<span class="text-status-nominal font-code-sm">LOCK 99.9%</span>
+</div>
+</div>
+</div>
+<div class="p-space-xs bg-surface-panel mt-space-xs">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-tertiary">STATION SYNC:</span>
+<span class="text-status-nominal font-bold">4/4 LOCKED (100%)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Deep Inspection Drawer / Active Pass Monitor (4 Cols) -->
+<div class="col-span-4 flex flex-col gap-space-xs">
+<!-- Panel Header -->
+<div class="bg-surface-panel p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-status-pending">policy</span>
+<span class="font-headline-sm text-headline-sm text-text-primary font-bold">CLEARING INSPECTOR</span>
+</div>
+<span class="bg-surface-inset text-primary px-space-xs py-0.5 font-label-sm text-label-sm">SLOT #OA-1042</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary">
+          Decentralized verification engine validating raw radio frequency telemetry ingest against smart escrow release conditions.
+        </p>
+</div>
+<!-- Pass Phase Timeline (Vertical Chrono Tracker) -->
+<div class="bg-surface-panel p-space-md flex flex-col gap-space-md">
+<div class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">SETTLEMENT EXECUTION TIMELINE</div>
+<div class="space-y-space-md relative pl-4 before:content-[''] before:absolute before:left-1 before:top-2 before:bottom-2 before:w-px before:bg-border-default">
+<!-- Phase 1 -->
+<div class="relative flex flex-col">
+<div class="absolute -left-[19px] top-1 h-2.5 w-2.5 bg-status-nominal"></div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-primary font-bold">1. SGP4 WINDOW BOOKED</span>
+<span class="text-status-nominal font-code-sm">CONFIRMED</span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">Orbital epoch validated via NORAD TLE #54921</span>
+</div>
+<!-- Phase 2 -->
+<div class="relative flex flex-col">
+<div class="absolute -left-[19px] top-1 h-2.5 w-2.5 bg-status-nominal"></div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-primary font-bold">2. ESCROW LOCKED ON SEPOLIA</span>
+<span class="text-status-nominal font-code-sm">12,500 USDC</span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">TxHash: 0x9e10...55da | Gas: 21,490</span>
+</div>
+<!-- Phase 3 -->
+<div class="relative flex flex-col">
+<div class="absolute -left-[19px] top-1 h-2.5 w-2.5 bg-status-active animate-pulse"></div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-primary font-bold">3. SATNOGS DOPPLER CAPTURE</span>
+<span class="text-status-active font-code-sm">INGESTING</span>
+</div>
+<span class="font-code-sm text-label-sm text-text-secondary">41.8 MB parsed // SNR: 24.2 dB nominal</span>
+</div>
+<!-- Phase 4 -->
+<div class="relative flex flex-col opacity-80">
+<div class="absolute -left-[19px] top-1 h-2.5 w-2.5 bg-status-pending"></div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-secondary font-bold">4. DON CONSENSUS QUORUM</span>
+<span class="text-status-pending font-code-sm">4/7 SIGNED</span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">Aggregating decentralized oracle attestation</span>
+</div>
+<!-- Phase 5 -->
+<div class="relative flex flex-col opacity-40">
+<div class="absolute -left-[19px] top-1 h-2.5 w-2.5 bg-text-tertiary"></div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-tertiary font-bold">5. FINAL SETTLEMENT DISBURSEMENT</span>
+<span class="text-text-tertiary font-code-sm">STANDBY</span>
+</div>
+<span class="font-code-sm text-label-sm text-text-tertiary">Payload CID pin & escrow balance transfer</span>
+</div>
+</div>
+</div>
+<!-- Live RF Signal & Telemetry Link Diagnostics -->
+<div class="bg-surface-panel p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">CARRIER LINK TELEMETRY (LIVE)</span>
+<span class="font-label-sm text-label-sm text-status-nominal flex items-center gap-1">
+<span class="h-1.5 w-1.5 bg-status-nominal animate-ping"></span>
+            CARRIER LOCKED
+          </span>
+</div>
+<!-- RF Diagnostic Grid -->
+<div class="grid grid-cols-2 gap-space-xs font-code-sm text-code-sm">
+<div class="bg-surface-inset p-space-xs flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary">CENTER FREQ</span>
+<span class="text-text-primary font-bold">2245.500 MHz</span>
+</div>
+<div class="bg-surface-inset p-space-xs flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary">DOPPLER OFFSET</span>
+<span class="text-status-nominal font-bold">-1.42 kHz</span>
+</div>
+<div class="bg-surface-inset p-space-xs flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary">MEASURED SNR</span>
+<span class="text-text-primary font-bold">24.2 dB</span>
+</div>
+<div class="bg-surface-inset p-space-xs flex flex-col">
+<span class="font-label-sm text-label-sm text-text-tertiary">FRAME LOSS</span>
+<span class="text-status-nominal font-bold">0.00% (0 pkts)</span>
+</div>
+</div>
+<!-- Mini RF Spectrum Waterfall Representation -->
+<div class="bg-canvas-base p-space-xs flex flex-col gap-1 overflow-hidden">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-text-tertiary">
+<span>2244.5 MHz</span>
+<span class="text-primary font-bold">RF WATERFALL SPECTRUM</span>
+<span>2246.5 MHz</span>
+</div>
+<div class="h-12 w-full bg-surface-inset flex items-end gap-0.5 px-1 py-1">
+<div class="w-1/12 bg-text-tertiary h-[20%]"></div>
+<div class="w-1/12 bg-text-tertiary h-[25%]"></div>
+<div class="w-1/12 bg-text-tertiary h-[15%]"></div>
+<div class="w-1/12 bg-status-active h-[45%]"></div>
+<div class="w-1/12 bg-primary h-[85%]"></div>
+<div class="w-1/12 bg-secondary h-[95%]"></div>
+<div class="w-1/12 bg-primary h-[80%]"></div>
+<div class="w-1/12 bg-status-active h-[50%]"></div>
+<div class="w-1/12 bg-text-tertiary h-[30%]"></div>
+<div class="w-1/12 bg-text-tertiary h-[20%]"></div>
+<div class="w-1/12 bg-text-tertiary h-[15%]"></div>
+<div class="w-1/12 bg-text-tertiary h-[20%]"></div>
+</div>
+</div>
+</div>
+<!-- Raw Data Extraction Deck -->
+<div class="bg-surface-panel p-space-md flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">DECRYPTED TELEMETRY & CLEARING DISPATCH</span>
+<div class="flex flex-col gap-space-xs font-label-sm text-label-sm">
+<button class="w-full bg-surface-inset hover:bg-surface-container-high text-text-primary px-space-md py-space-sm flex items-center justify-between transition-none">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-primary">download</span>
+<span>DOWNLOAD TELEMETRY PAYLOAD (.bin / .pcap)</span>
+</span>
+<span class="font-code-sm text-text-tertiary">41.8 MB</span>
+</button>
+<button class="w-full bg-surface-inset hover:bg-surface-container-high text-text-primary px-space-md py-space-sm flex items-center justify-between transition-none">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-hash-spectral">verified_user</span>
+<span>VERIFY MERKLE PROOF & DON ATTESTATION</span>
+</span>
+<span class="font-code-sm text-hash-spectral">0x91F8</span>
+</button>
+<button class="w-full bg-surface-inset hover:bg-surface-container-high text-text-primary px-space-md py-space-sm flex items-center justify-between transition-none">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-text-secondary">receipt_long</span>
+<span>EXPORT TAX & SETTLEMENT RECEIPT (PDF)</span>
+</span>
+<span class="font-code-sm text-text-tertiary">IRS / ITU</span>
+</button>
+</div>
+<div class="mt-space-xs p-space-xs bg-surface-inset flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-text-tertiary">CONTRACT ADDRESS:</span>
+<span class="font-code-sm text-code-sm text-primary">0x7f9a88319200a4B12</span>
+</div>
+</div>
+</div>
+</div>
+</div></main></div><footer class="fixed bottom-0 left-0 right-0 h-7 bg-surface-panel border-t border-border-default z-50 flex items-center justify-between px-margin-desktop font-label-sm text-label-sm text-text-secondary"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">GAS:</span><span class="text-status-nominal font-code-sm">14.2 GWEI</span></div><div class="h-3 w-px bg-border-default"></div><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">ETH BLOCK:</span><span class="text-text-primary font-code-sm">#6,892,104</span></div><div class="h-3 w-px bg-border-default"></div><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">IPFS GATEWAY:</span><span class="text-status-nominal">PINATA / FILECOIN NOMINAL</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">REGULATORY:</span><span class="text-text-primary">FCC IBFS SYNC NOMINAL</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div><div class="h-3 w-px bg-border-default"></div><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">ENCRYPTION:</span><span class="text-hash-spectral">ED25519-ECDSA</span></div></div></footer></body></html>

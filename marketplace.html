@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary":"#3c0091","background":"#11131c","status-nominal-surface":"rgba(6, 78, 59, 0.2)","text-tertiary":"#5A6275","secondary-fixed":"#6ffbbe","text-secondary":"#9BA3B8","outline":"#8c909f","inverse-surface":"#e1e1ef","surface-container-low":"#191b25","error-container":"#93000a","inverse-on-surface":"#2e303a","surface-panel":"#0D0F18","tertiary-fixed":"#e9ddff","surface-container-lowest":"#0c0e17","on-primary-fixed-variant":"#004395","status-pending":"#F59E0B","surface-container-high":"#282933","border-active":"#384259","surface-dim":"#11131c","on-secondary-container":"#00311f","secondary":"#4edea3","canvas-base":"#07080C","status-pending-surface":"rgba(120, 53, 15, 0.2)","surface-inset":"#131622","primary":"#adc6ff","on-tertiary-container":"#340080","surface-tint":"#adc6ff","status-active":"#3B82F6","primary-container":"#4d8eff","border-default":"#1F2433","on-primary":"#002e6a","on-background":"#e1e1ef","tertiary-container":"#a078ff","inverse-primary":"#005ac2","on-tertiary-fixed":"#23005c","on-secondary-fixed":"#002113","status-nominal":"#10B981","tertiary":"#d0bcff","error":"#ffb4ab","surface":"#11131c","status-active-surface":"rgba(30, 58, 138, 0.2)","primary-fixed-dim":"#adc6ff","on-primary-container":"#00285d","on-error-container":"#ffdad6","on-surface":"#e1e1ef","surface-bright":"#373943","status-breach":"#EF4444","hash-spectral":"#8B5CF6","secondary-fixed-dim":"#4edea3","text-primary":"#F0F3F8","on-secondary":"#003824","on-error":"#690005","surface-container":"#1d1f29","on-tertiary-fixed-variant":"#5516be","surface-container-highest":"#32343e","secondary-container":"#00a572","on-secondary-fixed-variant":"#005236","status-breach-surface":"rgba(127, 29, 29, 0.2)","tertiary-fixed-dim":"#d0bcff","outline-variant":"#424754","primary-fixed":"#d8e2ff","on-primary-fixed":"#001a42","surface-variant":"#32343e","on-surface-variant":"#c2c6d6"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-desktop":"1rem","space-lg":"0.75rem","space-md":"0.5rem","space-xs":"0.25rem","space-sm":"0.375rem","gutter":"0.5rem","space-xl":"1rem","margin":"0.5rem","gutter-desktop":"0.75rem"},"fontFamily":{"body-lg":["Inter"],"headline-md":["Inter"],"body-sm":["Inter"],"label-sm":["JetBrains Mono"],"body-md":["Inter"],"code-md":["JetBrains Mono"],"label-lg":["JetBrains Mono"],"headline-sm":["Inter"],"label-md":["JetBrains Mono"],"headline-lg":["Inter"],"code-sm":["JetBrains Mono"]},"fontSize":{"body-lg":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"500"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"code-md":["12px",{"lineHeight":"16px","fontWeight":"400"}],"label-lg":["13px",{"lineHeight":"18px","fontWeight":"500"}],"headline-sm":["14px",{"lineHeight":"20px","fontWeight":"600"}],"label-md":["11px",{"lineHeight":"16px","letterSpacing":"0.03em","fontWeight":"500"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-sm":["11px",{"lineHeight":"14px","fontWeight":"400"}]}}}}</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-canvas-base text-text-primary font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-panel border-b border-border-default"><div class="h-10 px-margin-desktop flex items-center justify-between border-b border-border-default bg-surface-panel"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-status-active text-headline-sm">satellite_alt</span><span class="font-label-md text-label-md tracking-wider text-text-primary font-semibold">DSRM // ORBITAL ACCESS EXCHANGE</span><span class="px-space-xs py-0 text-label-sm font-label-sm border border-border-default bg-surface-inset text-text-secondary">CLEARING v2.4</span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">NET:</span><span class="text-text-secondary">SEPOLIA ETH</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">CONTRACT:</span><span class="font-code-sm text-code-sm text-primary">0x7f9a...4B12</span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">SatNOGS ACTIVE:</span><span class="text-text-primary font-code-sm">418 ACTIVE</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">CHAINLINK DON:</span><span class="text-status-nominal font-code-sm">5/7 CONSENSUS</span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-code-sm text-code-sm bg-surface-inset px-space-sm py-0.5 border border-border-default"><span class="text-text-tertiary">UTC</span><span class="text-text-primary tracking-widest font-semibold">2025.04.12 18:42:09.841</span></div><div class="h-4 w-px bg-border-default"></div><div class="flex items-center gap-space-xs font-label-sm text-label-sm"><span class="text-text-tertiary">MULTI-SIG:</span><span class="text-status-nominal font-code-sm">3/5 SECURE</span></div><div class="flex items-center gap-space-xs font-code-sm text-code-sm bg-surface-inset px-space-sm py-0.5 border border-border-default text-text-secondary"><span class="text-text-tertiary">WALLET:</span><span class="text-primary font-code-sm">0x4f2a...9c1e</span></div></div></div><div class="h-9 px-margin-desktop flex items-center justify-between bg-surface-inset"><nav class="flex items-center h-full gap-0" data-active-classes="bg-surface-panel text-primary border-b-2 border-primary"><a aria-current="page" class="h-full px-space-lg flex items-center font-label-md transition-none bg-surface-panel text-primary border-b-2 border-primary" data-path="marketplace" href="#">MARKETPLACE (112 LIVE PASSES)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="my-bookings" href="#">MY BOOKINGS (3 ACTIVE)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="escrow-clearing" href="#">ESCROW & CLEARING (LIVE VERIFIED SETTLEMENT)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="telemetry-oracle" href="#">TELEMETRY ORACLE (SatNOGS / NOAA INGEST)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="operator-registry" href="#">OPERATOR REGISTRY (FCC / ITU VERIFIED)</a><a class="h-full px-space-lg flex items-center text-label-md font-label-md text-text-secondary hover:text-text-primary hover:bg-surface-panel border-r border-border-default transition-none" data-path="api-smart-contract" href="#">API & SMART CONTRACT (CHAINLINK FUNCTIONS)</a></nav><div class="flex items-center gap-space-sm text-label-sm font-label-sm"><span class="text-text-tertiary">CHANNEL:</span><span class="text-status-nominal font-code-sm">SECURE LINK E2EE</span></div></div></header><aside class="fixed left-0 top-[76px] bottom-7 w-64 bg-surface-panel border-r border-border-default z-40 flex flex-col justify-between"><div class="p-space-md border-b border-border-default"><div class="font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider mb-space-xs">Terminal Ops Module</div><div class="flex items-center justify-between"><span class="font-headline-sm text-headline-sm text-text-primary">FLIGHT COCKPIT</span><span class="h-2 w-2 bg-status-nominal animate-pulse"></span></div></div><div class="flex-1 py-space-sm px-space-xs overflow-y-auto space-y-0.5"><div class="px-space-sm py-space-xs font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Settlement Ops</div><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="marketplace" href="#"><span class="material-symbols-outlined text-headline-sm">swap_horiz</span><span>Pass Spot Market</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="my-bookings" href="#"><span class="material-symbols-outlined text-headline-sm">book_online</span><span>Committed Slots</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="escrow-clearing" href="#"><span class="material-symbols-outlined text-headline-sm">currency_exchange</span><span>Escrow Execution</span></a><div class="pt-space-md px-space-sm py-space-xs font-label-sm text-label-sm text-text-tertiary uppercase tracking-wider">Oracle Verification</div><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="telemetry-oracle" href="#"><span class="material-symbols-outlined text-headline-sm">radar</span><span>SatNOGS RF Passes</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="operator-registry" href="#"><span class="material-symbols-outlined text-headline-sm">verified_user</span><span>FCC IBFS Registrations</span></a><a class="w-full flex items-center gap-space-sm px-space-sm py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-inset border-l-2 border-transparent hover:border-primary font-label-md text-label-md" data-path="api-smart-contract" href="#"><span class="material-symbols-outlined text-headline-sm">terminal</span><span>Chainlink Functions</span></a></div><div class="p-space-sm border-t border-border-default bg-surface-inset"><div class="flex items-center justify-between font-label-sm text-label-sm mb-space-xs"><span class="text-text-tertiary">DON PEERS:</span><span class="text-text-primary font-code-sm">7 ONLINE</span></div><div class="flex items-center justify-between font-label-sm text-label-sm"><span class="text-text-tertiary">MERKLE ROOT:</span><span class="text-hash-spectral font-code-sm">0x91F8...6E</span></div></div></aside><div class="pl-64"><main class="relative pt-[76px] pb-7 w-full min-h-screen bg-canvas-base"><div class="flex flex-col w-full font-body-md text-text-primary">
+<!-- TOP TELEMETRY BENCHMARK BANNER -->
+<section class="w-full bg-surface-panel p-space-md shadow-sm mb-space-md">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-space-md text-left">
+<div class="bg-surface-inset p-space-sm">
+<div class="font-label-sm text-label-sm text-text-tertiary flex items-center justify-between">
+<span>AVAILABLE PASS WINDOWS</span>
+<span class="inline-block w-1.5 h-1.5 bg-status-nominal"></span>
+</div>
+<div class="font-headline-lg text-headline-lg text-text-primary mt-space-xs font-semibold">112</div>
+<div class="font-code-sm text-code-sm text-status-nominal mt-0.5">99.4% VERIFIED TLE</div>
+</div>
+<div class="bg-surface-inset p-space-sm">
+<div class="font-label-sm text-label-sm text-text-tertiary flex items-center justify-between">
+<span>AGGREGATE BANDWIDTH</span>
+<span class="material-symbols-outlined text-primary text-label-md">speed</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-primary mt-space-xs font-semibold">4.8 <span class="text-label-md text-text-secondary font-normal">Gbps</span></div>
+<div class="font-code-sm text-code-sm text-text-secondary mt-0.5">S / X / Ka POOLED</div>
+</div>
+<div class="bg-surface-inset p-space-sm">
+<div class="font-label-sm text-label-sm text-text-tertiary flex items-center justify-between">
+<span>MEAN ESCROW SPOT PRICE</span>
+<span class="material-symbols-outlined text-secondary text-label-md">payments</span>
+</div>
+<div class="font-headline-lg text-headline-lg text-secondary mt-space-xs font-semibold">$38.40 <span class="text-label-md text-text-secondary font-normal">/ pass</span></div>
+<div class="font-code-sm text-code-sm text-status-nominal mt-0.5">-4.2% VS 24H VWAP</div>
+</div>
+<div class="bg-surface-inset p-space-sm">
+<div class="font-label-sm text-label-sm text-text-tertiary flex items-center justify-between">
+<span>NEXT APOGEE WINDOW</span>
+<span class="inline-block w-1.5 h-1.5 bg-status-pending animate-pulse"></span>
+</div>
+<div class="font-headline-lg text-headline-lg text-status-pending mt-space-xs font-semibold">04m 12s</div>
+<div class="font-code-sm text-code-sm text-text-secondary mt-0.5">LEO CORRIDOR #09</div>
+</div>
+<div class="bg-surface-inset p-space-sm col-span-2 md:col-span-1">
+<div class="font-label-sm text-label-sm text-text-tertiary flex items-center justify-between">
+<span>CELESTRAK SGP4 SYNC</span>
+<span class="inline-block w-1.5 h-1.5 bg-status-nominal"></span>
+</div>
+<div class="font-headline-lg text-headline-lg text-status-nominal mt-space-xs font-semibold">NOMINAL</div>
+<div class="font-code-sm text-code-sm text-text-tertiary mt-0.5">EPOCH 2025102.778</div>
+</div>
+</div>
+</section>
+<!-- NATURAL LANGUAGE QUERY & PARAMETRIC CONSTRAINTS -->
+<section class="w-full bg-surface-panel p-space-md mb-space-md shadow-sm">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-space-md">
+<div class="flex-1 relative bg-surface-inset">
+<div class="absolute left-space-md top-1/2 -translate-y-1/2 flex items-center gap-space-xs text-text-tertiary pointer-events-none">
+<span class="material-symbols-outlined text-headline-sm text-primary">terminal</span>
+<span class="font-code-sm text-code-sm text-text-tertiary">EXEC></span>
+</div>
+<input class="w-full bg-transparent pl-20 pr-space-md py-space-sm font-code-md text-code-md text-text-primary placeholder-text-tertiary focus:outline-none focus:bg-surface-container-high transition-colors" id="orbitalQueryInput" placeholder="Query by pass duration, RF band, ground station lat/long, or ephemeris timestamp..." type="text" value="I need 10 minutes of S/X-Band downlink connectivity over South Asia / Indian Ocean corridor tomorrow 06:00-08:00 UTC"/>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-primary text-on-primary px-space-md py-1.5 font-label-md text-label-md font-semibold flex items-center gap-space-xs hover:bg-primary-fixed transition-colors" id="btnRunQuery">
+<span class="material-symbols-outlined text-headline-sm">satellite</span>
+<span>QUERY CONSTELLATION</span>
+</button>
+<button class="bg-surface-inset text-text-secondary px-space-md py-1.5 font-label-md text-label-md hover:text-text-primary hover:bg-surface-container-high transition-colors" id="btnResetFilters">
+          CLEAR
+        </button>
+</div>
+</div>
+<!-- FILTER CHIPS ROW -->
+<div class="flex flex-wrap items-center gap-space-xs mt-space-md pt-space-xs bg-surface-panel">
+<span class="font-label-sm text-label-sm text-text-tertiary mr-space-xs uppercase tracking-wider">CONSTRAINTS:</span>
+<!-- Band Dropdown Chip -->
+<div class="relative inline-block" id="bandFilterContainer">
+<button class="bg-surface-inset text-text-primary px-space-sm py-1 font-label-sm text-label-sm flex items-center gap-space-xs hover:bg-surface-container-high">
+<span class="text-text-tertiary">BAND:</span>
+<span class="text-primary font-semibold" id="activeBandLabel">S-BAND, X-BAND</span>
+<span class="material-symbols-outlined text-code-sm text-text-tertiary">expand_more</span>
+</button>
+</div>
+<!-- Min Elevation Chip -->
+<button class="bg-surface-inset text-text-primary px-space-sm py-1 font-label-sm text-label-sm flex items-center gap-space-xs hover:bg-surface-container-high">
+<span class="text-text-tertiary">MIN EL:</span>
+<span class="text-secondary font-semibold">> 25.0°</span>
+<span class="material-symbols-outlined text-code-sm text-status-nominal">check</span>
+</button>
+<!-- Cloud Attenuation Chip -->
+<button class="bg-surface-inset text-text-primary px-space-sm py-1 font-label-sm text-label-sm flex items-center gap-space-xs hover:bg-surface-container-high">
+<span class="text-text-tertiary">CLOUD ATTN:</span>
+<span class="text-status-pending font-semibold">< 15.0%</span>
+<span class="material-symbols-outlined text-code-sm text-status-nominal">check</span>
+</button>
+<!-- Staked Collateral Chip -->
+<button class="bg-surface-inset text-text-primary px-space-sm py-1 font-label-sm text-label-sm flex items-center gap-space-xs hover:bg-surface-container-high">
+<span class="text-text-tertiary">SLASH STAKE:</span>
+<span class="text-hash-spectral font-semibold">> $20,000 USDC</span>
+<span class="material-symbols-outlined text-code-sm text-status-nominal">verified</span>
+</button>
+<!-- Ground Target Selector -->
+<div class="ml-auto flex items-center gap-space-xs bg-surface-inset px-space-sm py-1">
+<span class="material-symbols-outlined text-label-sm text-status-nominal">location_on</span>
+<span class="font-label-sm text-label-sm text-text-tertiary">GROUND VECTOR:</span>
+<span class="font-code-sm text-code-sm text-text-primary">INDIAN OCEAN / ISRO 13.03N 77.51E</span>
+</div>
+</div>
+</section>
+<!-- MAIN COCKPIT WORKSPACE: SPOT ORDER BOOK + RIGHT INSPECTION DOCK -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start w-full">
+<!-- LEFT & CENTER: PASS SPOT MARKET LEDGER (COL 8) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<div class="bg-surface-panel shadow-sm">
+<!-- Panel Head -->
+<div class="bg-surface-inset px-space-md py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-headline-sm">table_rows</span>
+<span class="font-label-md text-label-md text-text-primary uppercase tracking-wider font-semibold">LIVE SPOT PASS CANDIDATES (4 RANKED MATCHES)</span>
+</div>
+<div class="flex items-center gap-space-md font-label-sm text-label-sm">
+<span class="text-text-tertiary">SORT: <strong class="text-text-primary font-normal">COMPOSITE QOS / PRICE</strong></span>
+<span class="inline-flex items-center gap-1 text-status-nominal"><span class="w-1.5 h-1.5 bg-status-nominal"></span>FEED ACTIVE</span>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="bg-surface-inset text-text-tertiary font-label-sm text-label-sm tracking-wider">
+<th class="px-space-md py-2 font-medium">PASS ID</th>
+<th class="px-space-md py-2 font-medium">SAT / NORAD</th>
+<th class="px-space-md py-2 font-medium">ORBIT</th>
+<th class="px-space-md py-2 font-medium">AOS - LOS (UTC)</th>
+<th class="px-space-md py-2 font-medium text-right">MAX EL</th>
+<th class="px-space-md py-2 font-medium">RF SPECTRUM</th>
+<th class="px-space-md py-2 font-medium text-right">THROUGHPUT</th>
+<th class="px-space-md py-2 font-medium text-right">SPOT PRICE</th>
+<th class="px-space-md py-2 font-medium text-center">COLLATERAL</th>
+<th class="px-space-md py-2 font-medium text-center">WEATHER</th>
+<th class="px-space-md py-2 font-medium text-right">SETTLEMENT</th>
+</tr>
+</thead>
+<tbody class="divide-y-0" id="passLedgerBody">
+<!-- ROW 1 (DEFAULT SELECTED) -->
+<tr class="hover:bg-surface-inset cursor-pointer bg-surface-inset transition-colors" data-pass-id="OA-1042">
+<td class="px-space-md py-space-sm font-code-sm text-code-sm text-primary font-semibold">#OA-1042</td>
+<td class="px-space-md py-space-sm">
+<div class="font-headline-sm text-headline-sm text-text-primary leading-tight">ORBITEX SAT-07</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">NORAD #55124 // OPERATOR: ORBITEX CORP</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="bg-surface-panel px-space-xs py-0.5 text-text-secondary font-label-sm text-label-sm">550km SSO</span>
+</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<span class="text-text-primary">06:42:10</span> - <span class="text-text-primary">06:52:45</span>
+<div class="text-text-tertiary">10m 35s DUR</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-secondary font-semibold">74.8°</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<div class="text-primary font-semibold">S-BAND</div>
+<div class="text-text-tertiary text-label-sm">2245.500 MHz</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-text-primary">32 Mbps</td>
+<td class="px-space-md py-space-sm text-right">
+<div class="font-code-md text-code-md text-secondary font-bold">$41.00</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">USDC</div>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<span class="bg-status-nominal-surface text-status-nominal font-code-sm text-code-sm px-space-xs py-0.5 font-semibold">120% STAKED</span>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<div class="flex items-center justify-center gap-1 font-code-sm text-code-sm text-status-nominal">
+<span class="w-1.5 h-1.5 bg-status-nominal"></span>
+<span>1.2%</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="bg-primary text-on-primary px-space-sm py-1 font-label-sm text-label-sm uppercase font-semibold hover:bg-primary-fixed transition-colors">
+                    LOCK ESCROW
+                  </button>
+</td>
+</tr>
+<!-- ROW 2 -->
+<tr class="hover:bg-surface-inset cursor-pointer transition-colors" data-pass-id="OA-1048">
+<td class="px-space-md py-space-sm font-code-sm text-code-sm text-primary font-semibold">#OA-1048</td>
+<td class="px-space-md py-space-sm">
+<div class="font-headline-sm text-headline-sm text-text-primary leading-tight">MERIDIAN METEOSAT-X</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">NORAD #48911 // OPERATOR: MERIDIAN GEO</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="bg-surface-panel px-space-xs py-0.5 text-text-secondary font-label-sm text-label-sm">480km POLAR</span>
+</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<span class="text-text-primary">07:11:05</span> - <span class="text-text-primary">07:22:18</span>
+<div class="text-text-tertiary">11m 13s DUR</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-secondary font-semibold">62.1°</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<div class="text-hash-spectral font-semibold">X-BAND</div>
+<div class="text-text-tertiary text-label-sm">8150.000 MHz</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-text-primary">150 Mbps</td>
+<td class="px-space-md py-space-sm text-right">
+<div class="font-code-md text-code-md text-secondary font-bold">$85.00</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">USDC</div>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<span class="bg-status-nominal-surface text-status-nominal font-code-sm text-code-sm px-space-xs py-0.5 font-semibold">200% STAKED</span>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<div class="flex items-center justify-center gap-1 font-code-sm text-code-sm text-status-pending">
+<span class="w-1.5 h-1.5 bg-status-pending"></span>
+<span>4.8%</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="bg-surface-container text-text-primary px-space-sm py-1 font-label-sm text-label-sm uppercase font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+                    LOCK ESCROW
+                  </button>
+</td>
+</tr>
+<!-- ROW 3 -->
+<tr class="hover:bg-surface-inset cursor-pointer transition-colors" data-pass-id="OA-1052">
+<td class="px-space-md py-space-sm font-code-sm text-code-sm text-primary font-semibold">#OA-1052</td>
+<td class="px-space-md py-space-sm">
+<div class="font-headline-sm text-headline-sm text-text-primary leading-tight">HELIOSAT CUBE-4</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">NORAD #53109 // OPERATOR: HELIO LABS</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="bg-surface-panel px-space-xs py-0.5 text-text-secondary font-label-sm text-label-sm">510km LEO</span>
+</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<span class="text-text-primary">05:58:30</span> - <span class="text-text-primary">06:08:42</span>
+<div class="text-text-tertiary">10m 12s DUR</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-secondary font-semibold">41.5°</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<div class="text-primary font-semibold">UHF / S</div>
+<div class="text-text-tertiary text-label-sm">2210.000 MHz</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-text-primary">20 Mbps</td>
+<td class="px-space-md py-space-sm text-right">
+<div class="font-code-md text-code-md text-secondary font-bold">$24.00</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">USDC</div>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<span class="bg-status-active-surface text-status-active font-code-sm text-code-sm px-space-xs py-0.5 font-semibold">100% STAKED</span>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<div class="flex items-center justify-center gap-1 font-code-sm text-code-sm text-status-nominal">
+<span class="w-1.5 h-1.5 bg-status-nominal"></span>
+<span>0.0%</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="bg-surface-container text-text-primary px-space-sm py-1 font-label-sm text-label-sm uppercase font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+                    LOCK ESCROW
+                  </button>
+</td>
+</tr>
+<!-- ROW 4 -->
+<tr class="hover:bg-surface-inset cursor-pointer transition-colors" data-pass-id="OA-1059">
+<td class="px-space-md py-space-sm font-code-sm text-code-sm text-primary font-semibold">#OA-1059</td>
+<td class="px-space-md py-space-sm">
+<div class="font-headline-sm text-headline-sm text-text-primary leading-tight">NORDIC SYNTH-APERTURE-02</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">NORAD #56488 // OPERATOR: NORDIC SAR AG</div>
+</td>
+<td class="px-space-md py-space-sm">
+<span class="bg-surface-panel px-space-xs py-0.5 text-text-secondary font-label-sm text-label-sm">570km DAWN-DUSK</span>
+</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<span class="text-text-primary">08:30:00</span> - <span class="text-text-primary">08:44:15</span>
+<div class="text-text-tertiary">14m 15s DUR</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-secondary font-semibold">82.4°</td>
+<td class="px-space-md py-space-sm font-code-sm text-code-sm">
+<div class="text-tertiary font-semibold">Ka-BAND</div>
+<div class="text-text-tertiary text-label-sm">26500.00 MHz</div>
+</td>
+<td class="px-space-md py-space-sm text-right font-code-sm text-code-sm text-text-primary">300 Mbps</td>
+<td class="px-space-md py-space-sm text-right">
+<div class="font-code-md text-code-md text-secondary font-bold">$140.00</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">USDC</div>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<span class="bg-status-nominal-surface text-status-nominal font-code-sm text-code-sm px-space-xs py-0.5 font-semibold">250% STAKED</span>
+</td>
+<td class="px-space-md py-space-sm text-center">
+<div class="flex items-center justify-center gap-1 font-code-sm text-code-sm text-text-secondary">
+<span class="w-1.5 h-1.5 bg-status-nominal"></span>
+<span>SAR RAW</span>
+</div>
+</td>
+<td class="px-space-md py-space-sm text-right">
+<button class="bg-surface-container text-text-primary px-space-sm py-1 font-label-sm text-label-sm uppercase font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+                    LOCK ESCROW
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Telemetry Bar -->
+<div class="bg-surface-panel px-space-md py-space-xs flex flex-wrap items-center justify-between font-code-sm text-code-sm text-text-tertiary">
+<div class="flex items-center gap-space-md">
+<span>MEMPOOL STATUS: <span class="text-status-nominal font-semibold">0 CONFLICTS</span></span>
+<span>DON SLASHER RATIO: <span class="text-text-primary">1:1.8 COLLATERALIZED</span></span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span>SHOWING 4 OF 112 DISCOVERABLE WINDOWS</span>
+</div>
+</div>
+</div>
+<!-- SATELLITE TELEMETRY & SPECTRUM PROFILE CARD -->
+<div class="bg-surface-panel p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-hash-spectral">graphic_eq</span>
+<span class="font-label-md text-label-md text-text-primary uppercase tracking-wider font-semibold">PASS RF PROFILE & DOPPLER SHIFT CURVE</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-secondary">SELECTED: #OA-1042 // ORBITEX SAT-07</span>
+</div>
+<!-- RF Waterfall Simulation / Visualizer Bar -->
+<div class="w-full bg-surface-inset p-space-sm relative overflow-hidden">
+<div class="flex justify-between font-code-sm text-code-sm text-text-tertiary mb-space-xs">
+<span>Fc - 50.0 kHz (2245.450 MHz)</span>
+<span class="text-primary font-semibold">CENTER FREQ: 2245.500 MHz (RHCP POLARIZATION)</span>
+<span>Fc + 50.0 kHz (2245.550 MHz)</span>
+</div>
+<!-- Inline Doppler & Signal Strength Visualizer -->
+<div class="h-28 w-full bg-canvas-base relative flex items-center justify-center p-space-xs">
+<!-- Simulated Spectrum Grid Lines -->
+<div class="absolute inset-0 grid grid-cols-6 grid-rows-4 pointer-events-none opacity-20">
+<div class="bg-surface-container"></div><div class="bg-surface-container"></div>
+<div class="bg-surface-container"></div><div class="bg-surface-container"></div>
+<div class="bg-surface-container"></div><div class="bg-surface-container"></div>
+</div>
+<svg class="w-full h-full preserve-3d" fill="none" viewbox="0 0 800 100">
+<!-- Grid line markers -->
+<line stroke="#1F2433" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#1F2433" stroke-width="1" x1="400" x2="400" y1="0" y2="100"></line>
+<!-- S-Curve Doppler Track -->
+<path d="M 50 15 C 200 15, 300 35, 400 50 C 500 65, 600 85, 750 85" stroke="#3B82F6" stroke-width="2.5"></path>
+<!-- SNR Power envelope gradient -->
+<path d="M 50 95 Q 400 10, 750 95" fill="rgba(78, 222, 163, 0.08)" stroke="#4edea3" stroke-width="1.5"></path>
+<!-- Current Predicted Elevation Point -->
+<circle class="animate-pulse" cx="400" cy="50" fill="#adc6ff" r="5"></circle>
+</svg>
+<!-- Annotation overlay -->
+<div class="absolute right-space-md top-space-xs font-code-sm text-code-sm text-secondary bg-surface-panel px-space-xs py-0.5">
+              MAX SNR: +18.4 dB-Hz
+            </div>
+<div class="absolute left-space-md bottom-space-xs font-code-sm text-code-sm text-text-tertiary">
+              DOPPLER DELTA: +38.2 kHz -> -38.2 kHz
+            </div>
+</div>
+<div class="flex items-center justify-between mt-space-xs font-label-sm text-label-sm text-text-tertiary">
+<span>MODULATION: QPSK / DVB-S2X</span>
+<span>EIRP: 14.5 dBW</span>
+<span>ENCRYPTION: AES-GCM-256 SESSION KEY EXCHANGE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT DECK: SIDE INSPECTION PANEL & ESCROW CONTRACT ESTIMATOR (COL 4) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- GROUND TRACK & POLAR ELEVATION CHART -->
+<div class="bg-surface-panel shadow-sm p-space-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-status-nominal">radar</span>
+<span class="font-label-md text-label-md text-text-primary uppercase tracking-wider font-semibold">AZ / EL POLAR GROUND TRACK</span>
+</div>
+<span class="font-code-sm text-code-sm text-status-nominal">ISRO-BLR GS</span>
+</div>
+<div class="bg-surface-inset p-space-md flex flex-col items-center">
+<!-- POLAR AZIMUTH RADAR SVG -->
+<div class="relative w-56 h-56 flex items-center justify-center">
+<svg class="w-full h-full" fill="none" viewbox="0 0 200 200">
+<!-- Outer Azimuth Ring -->
+<circle cx="100" cy="100" r="95" stroke="#1F2433" stroke-width="1.5"></circle>
+<!-- Elevation Rings (30°, 60°) -->
+<circle cx="100" cy="100" r="63" stroke="#1F2433" stroke-dasharray="3 3" stroke-width="1"></circle>
+<circle cx="100" cy="100" r="32" stroke="#1F2433" stroke-dasharray="3 3" stroke-width="1"></circle>
+<!-- Zenith Center Point -->
+<circle cx="100" cy="100" fill="#9BA3B8" r="2"></circle>
+<!-- Crosshairs -->
+<line stroke="#1F2433" stroke-width="1" x1="100" x2="100" y1="5" y2="195"></line>
+<line stroke="#1F2433" stroke-width="1" x1="5" x2="195" y1="100" y2="100"></line>
+<!-- Compass Headings -->
+<text fill="#5A6275" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="100" y="14">N 0°</text>
+<text fill="#5A6275" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="188" y="103">E 90°</text>
+<text fill="#5A6275" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="100" y="193">S 180°</text>
+<text fill="#5A6275" font-family="JetBrains Mono" font-size="8" text-anchor="middle" x="12" y="103">W 270°</text>
+<!-- Pass Trajectory Arc: Az 142.1° to Az 318.5° reaching Max El 74.8° -->
+<!-- AOS point: Southeast ~142 deg, edge (r=95) -> Max El point ~ center (r=16) -> LOS point: Northwest ~318 deg, edge -->
+<path d="M 158 174 Q 108 85 36 29" stroke="#3B82F6" stroke-linecap="square" stroke-width="2"></path>
+<!-- AOS Marker -->
+<circle cx="158" cy="174" fill="#10B981" r="3.5"></circle>
+<!-- Max El Marker -->
+<circle cx="108" cy="85" fill="#F59E0B" r="4"></circle>
+<!-- LOS Marker -->
+<circle cx="36" cy="29" fill="#EF4444" r="3.5"></circle>
+</svg>
+<div class="absolute bottom-1 right-2 font-code-sm text-code-sm text-text-tertiary">MAX EL: 74.8°</div>
+</div>
+<!-- Ephemeris Vector Metadata Grid -->
+<div class="w-full grid grid-cols-3 gap-space-xs mt-space-md pt-space-sm bg-surface-panel p-space-xs text-center">
+<div>
+<div class="font-label-sm text-label-sm text-text-tertiary">AOS AZIMUTH</div>
+<div class="font-code-sm text-code-sm text-status-nominal font-semibold">142.1° (SE)</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">06:42:10 UTC</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-text-tertiary">APOGEE EL</div>
+<div class="font-code-sm text-code-sm text-status-pending font-semibold">74.8° ZENITH</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">06:47:22 UTC</div>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-text-tertiary">LOS AZIMUTH</div>
+<div class="font-code-sm text-code-sm text-error font-semibold">318.5° (NW)</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">06:52:45 UTC</div>
+</div>
+</div>
+</div>
+</div>
+<!-- NOAA GFS / OPEN-METEO CORRIDOR RISK LAYER -->
+<div class="bg-surface-panel shadow-sm p-space-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-primary">cloud</span>
+<span class="font-label-md text-label-md text-text-primary uppercase tracking-wider font-semibold">NOAA GFS CLOUD ATTENUATION MATRIX</span>
+</div>
+<span class="font-code-sm text-code-sm text-text-secondary">T-18H PREDICT</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<!-- Station 1: Bangalore -->
+<div class="bg-surface-inset p-space-sm flex items-center justify-between">
+<div>
+<div class="font-label-md text-label-md text-text-primary font-semibold">BANGALORE (BLR-01)</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">12.97°N, 77.59°E // CIRRUS 12,000m</div>
+</div>
+<div class="text-right">
+<div class="font-code-sm text-code-sm text-status-nominal font-bold">1.2% RISK</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">-0.1 dB ATTN</div>
+</div>
+</div>
+<!-- Station 2: Hyderabad -->
+<div class="bg-surface-inset p-space-sm flex items-center justify-between">
+<div>
+<div class="font-label-md text-label-md text-text-primary font-semibold">HYDERABAD (HYD-04)</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">17.38°N, 78.48°E // SCATTERED CUMULUS</div>
+</div>
+<div class="text-right">
+<div class="font-code-sm text-code-sm text-status-nominal font-bold">3.4% RISK</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">-0.3 dB ATTN</div>
+</div>
+</div>
+<!-- Station 3: Mumbai Coastal -->
+<div class="bg-surface-inset p-space-sm flex items-center justify-between">
+<div>
+<div class="font-label-md text-label-md text-text-primary font-semibold">MUMBAI COASTAL (BOM-02)</div>
+<div class="font-code-sm text-code-sm text-text-tertiary">19.07°N, 72.87°E // MARINE STRATUS</div>
+</div>
+<div class="text-right">
+<div class="font-code-sm text-code-sm text-status-pending font-bold">11.8% RISK</div>
+<div class="font-label-sm text-label-sm text-text-tertiary">-1.1 dB ATTN</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ESCROW PRE-FLIGHT CHECK & SMART CONTRACT ESTIMATOR -->
+<div class="bg-surface-panel shadow-sm p-space-md">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-headline-sm text-secondary">verified_user</span>
+<span class="font-label-md text-label-md text-text-primary uppercase tracking-wider font-semibold">ESCROW PRE-FLIGHT & DEPOSIT</span>
+</div>
+<span class="bg-surface-inset text-primary px-space-xs py-0.5 font-code-sm text-code-sm">SOLIDITY v0.8.24</span>
+</div>
+<div class="bg-surface-inset p-space-sm flex flex-col gap-space-xs font-code-sm text-code-sm">
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-text-tertiary">REQUIRED DEPOSIT (USDC):</span>
+<span class="text-text-primary font-bold font-code-md text-code-md">41.000000 USDC</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-text-tertiary">OPERATOR COLLATERAL LOCK:</span>
+<span class="text-status-nominal font-bold">49.20 USDC (120%)</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-text-tertiary">ESTIMATED GAS (SEPOLIA):</span>
+<span class="text-text-secondary">0.0028 ETH (~14.2 GWEI)</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-text-tertiary">ORACLE VERIFIER DON:</span>
+<span class="text-hash-spectral">SatNOGS / CHAINLINK (5/7)</span>
+</div>
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-text-tertiary">AUTO-RELEASE CONDITION:</span>
+<span class="text-text-primary font-semibold">>= 95.0% VALID FRAMES</span>
+</div>
+</div>
+<!-- Escrow Settlement Action Button -->
+<div class="mt-space-md flex flex-col gap-space-xs">
+<button class="w-full bg-status-active text-on-primary py-space-sm font-label-md text-label-md font-bold uppercase tracking-wider hover:bg-primary-fixed transition-colors flex items-center justify-center gap-space-xs" id="btnExecuteEscrow">
+<span class="material-symbols-outlined text-headline-sm">lock</span>
+<span>INITIALIZE ESCROW CONTRACT // 41.00 USDC</span>
+</button>
+<div class="font-code-sm text-code-sm text-text-tertiary text-center">
+            NONCE: #08492 // ATTESTATION ROUTER: 0x7f9a...4B12
+          </div>
+</div>
+</div>
+</div>
+</div>
+<!-- INTERACTIVE CLIENT CONTROLLER SCRIPT -->
+<script>
+    (function() {
+      // Table Row Select State
+      const rows = document.querySelectorAll('#passLedgerBody tr');
+      rows.forEach(row => {
+        row.addEventListener('click', function(e) {
+          if (e.target.tagName.toLowerCase() === 'button') return;
+          rows.forEach(r => r.classList.remove('bg-surface-inset'));
+          this.classList.add('bg-surface-inset');
+        });
+      });
+
+      // Simple Search Query Event
+      const queryInput = document.getElementById('orbitalQueryInput');
+      const btnRun = document.getElementById('btnRunQuery');
+      const btnReset = document.getElementById('btnResetFilters');
+
+      btnRun?.addEventListener('click', function() {
+        const val = queryInput.value.toLowerCase();
+        rows.forEach(r => {
+          const text = r.innerText.toLowerCase();
+          if (text.includes('s-band') || text.includes('orbitex') || text.includes('meridian') || text.includes('ka-band')) {
+            r.style.display = '';
+          }
+        });
+      });
+
+      btnReset?.addEventListener('click', function() {
+        queryInput.value = '';
+        rows.forEach(r => r.style.display = '');
+      });
+
+      // Escrow Lock Mock Toast Interaction
+      const lockButtons = document.querySelectorAll('button');
+      lockButtons.forEach(btn => {
+        if (btn.innerText.includes('LOCK ESCROW') || btn.innerText.includes('INITIALIZE ESCROW')) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const originalText = this.innerHTML;
+            this.innerHTML = `<span class="material-symbols-outlined text-headline-sm animate-spin">sync</span> BROADCASTING TX...`;
+            setTimeout(() => {
+              this.innerHTML = `<span class="material-symbols-outlined text-headline-sm">check_circle</span> ESCROW COMMITTED`;
+              this.classList.remove('bg-primary', 'bg-status-active');
+              this.classList.add('bg-status-nominal-surface', 'text-status-nominal');
+            }, 1100);
+          });
+        }
+      });
+    })();
+  </script>
+</div></main></div><footer class="fixed bottom-0 left-0 right-0 h-7 bg-surface-panel border-t border-border-default z-50 flex items-center justify-between px-margin-desktop font-label-sm text-label-sm text-text-secondary"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">GAS:</span><span class="text-status-nominal font-code-sm">14.2 GWEI</span></div><div class="h-3 w-px bg-border-default"></div><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">ETH BLOCK:</span><span class="text-text-primary font-code-sm">#6,892,104</span></div><div class="h-3 w-px bg-border-default"></div><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">IPFS GATEWAY:</span><span class="text-status-nominal">PINATA / FILECOIN NOMINAL</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div></div><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">REGULATORY:</span><span class="text-text-primary">FCC IBFS SYNC NOMINAL</span><span class="h-1.5 w-1.5 bg-status-nominal"></span></div><div class="h-3 w-px bg-border-default"></div><div class="flex items-center gap-space-xs"><span class="text-text-tertiary">ENCRYPTION:</span><span class="text-hash-spectral">ED25519-ECDSA</span></div></div></footer></body></html>

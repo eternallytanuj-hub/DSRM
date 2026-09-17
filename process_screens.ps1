@@ -1,0 +1,14 @@
+Invoke-WebRequest -Uri "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1YmEwNDUzNTI3NTAwMzMyY2ZjM2VlMjM0MjJkEgsSBxCzvcLilRcYAZIBIwoKcHJvamVjdF9pZBIVQhM5Mjg5MDM4NzY3MTg4MDI2MDIw&filename=&opi=89354086" -OutFile "bookings.html"
+node convert_screen.js bookings.html src/app/bookings/page.tsx Bookings
+
+Invoke-WebRequest -Uri "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1YmEwM2Q2NzIzZjIwMzM4NjBhZTMzMzc3NWZjEgsSBxCzvcLilRcYAZIBIwoKcHJvamVjdF9pZBIVQhM5Mjg5MDM4NzY3MTg4MDI2MDIw&filename=&opi=89354086" -OutFile "escrow.html"
+node convert_screen.js escrow.html src/app/escrow/page.tsx Escrow
+
+Invoke-WebRequest -Uri "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1YmEwNDU5N2MxMDkwMmQzYzY0YmExMDZkZDkyEgsSBxCzvcLilRcYAZIBIwoKcHJvamVjdF9pZBIVQhM5Mjg5MDM4NzY3MTg4MDI2MDIw&filename=&opi=89354086" -OutFile "api-engine.html"
+node convert_screen.js api-engine.html src/app/api-engine/page.tsx APIEngine
+
+Invoke-WebRequest -Uri "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1YmEwNDUyY2VlNWMwMzM4NjBkYWE3MTVkZGVmEgsSBxCzvcLilRcYAZIBIwoKcHJvamVjdF9pZBIVQhM5Mjg5MDM4NzY3MTg4MDI2MDIw&filename=&opi=89354086" -OutFile "telemetry.html"
+node convert_screen.js telemetry.html src/app/telemetry/page.tsx Telemetry
+
+Invoke-WebRequest -Uri "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ7Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpaCiVodG1sXzAwMDY1YmEwNDVhMGRmOGUwOTM0ZDAyY2EyMDE2ZmUyEgsSBxCzvcLilRcYAZIBIwoKcHJvamVjdF9pZBIVQhM5Mjg5MDM4NzY3MTg4MDI2MDIw&filename=&opi=89354086" -OutFile "registry.html"
+node convert_screen.js registry.html src/app/registry/page.tsx Registry
