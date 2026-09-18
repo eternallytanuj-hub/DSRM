@@ -39,12 +39,12 @@ export async function recordBookingReceipt(booking: {
         .maybeSingle();
 
       if (!existingProfile) {
-        await supabase.from('profiles').insert({
+        await supabase.from('profiles').upsert({
           wallet_address: normalizedWallet,
           display_tag: `Terminal ${booking.user_address.slice(0, 6)}`,
           kyc_tier: 'Tier 1',
           reputation_score: 100
-        });
+        }, { onConflict: 'wallet_address', ignoreDuplicates: true });
       }
     }
 
@@ -52,7 +52,7 @@ export async function recordBookingReceipt(booking: {
       id: booking.id,
       booking_id: booking.booking_id,
       user_address: booking.user_address.toLowerCase(),
-      operator_address: booking.operator_address || null,
+      operator_address: booking.operator_address ? booking.operator_address.toLowerCase() : null,
       satellite: booking.satellite,
       norad_id: booking.norad_id || null,
       window_start: booking.window_start || null,
@@ -164,6 +164,29 @@ export async function createOperatorListing(listing: {
   }
 }
 
+export async function updateOperatorListingStatus(
+  listingId: string, 
+  status: 'AVAILABLE' | 'BOOKED' | 'COMPLETED' | 'CANCELLED'
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const supabase = getServerSupabase();
+    const { error } = await supabase
+      .from('operator_listings')
+      .update({ status })
+      .eq('id', listingId);
+
+    if (error) {
+      console.error('Error updating operator listing status:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: any) {
+    console.error('Exception in updateOperatorListingStatus:', err);
+    return { success: false, error: err?.message || 'Failed to update operator listing' };
+  }
+}
+
 export async function fetchProfiles(): Promise<{ success: boolean; data: Profile[]; error?: string }> {
   try {
     const supabase = getServerSupabase();
@@ -192,7 +215,7 @@ export async function syncUserProfile(walletAddress: string, displayTag?: string
     const { data: existing } = await supabase
       .from('profiles')
       .select('*')
-      .eq('wallet_address', normalized)
+      .ilike('wallet_address', normalized)
       .maybeSingle();
 
     if (existing) {
@@ -201,12 +224,12 @@ export async function syncUserProfile(walletAddress: string, displayTag?: string
 
     const { data, error } = await supabase
       .from('profiles')
-      .insert({
+      .upsert({
         wallet_address: normalized,
         display_tag: displayTag || `Operator ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`,
         kyc_tier: 'Tier 1',
         reputation_score: 100
-      })
+      }, { onConflict: 'wallet_address' })
       .select()
       .single();
 

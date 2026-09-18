@@ -18,13 +18,16 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount, useWriteContract } from 'wagmi';
+import { waitForTransactionReceipt } from 'wagmi/actions';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { parseEther, stringToHex, keccak256 } from 'viem';
 
 import { searchMarketplaceWithGroq } from './actions';
 import { DEFAULT_REAL_PASSES, SatellitePass } from './types';
 import SatelliteEscrowArtifact from '@/contracts/SatelliteEscrow.json';
-import { recordBookingReceipt, fetchOperatorListings, syncUserProfile } from '@/app/actions/supabase';
+import { recordBookingReceipt, fetchOperatorListings, syncUserProfile, updateOperatorListingStatus } from '@/app/actions/supabase';
+import { supabase } from '@/lib/supabase';
+import { wagmiConfig } from '@/components/Web3Provider';
 
 const SAMPLE_QUERIES = [
   "High-speed broadband pass over South Asia / India",
@@ -44,6 +47,7 @@ export default function MarketplacePage() {
   const { writeContractAsync } = useWriteContract();
 
   const [lockingPassId, setLockingPassId] = useState<string | null>(null);
+  const [lockingStatusText, setLockingStatusText] = useState<string>('Sign in Wallet (0.0001 ETH)...');
   const [lockedModal, setLockedModal] = useState<{
     pass: SatellitePass;
     bookingRef: string;
@@ -63,6 +67,7 @@ export default function MarketplacePage() {
     }
 
     setLockingPassId(p.id);
+    setLockingStatusText('Sign in Wallet (0.0001 ETH)...');
     setErrorMessage(null);
 
     try {
@@ -88,6 +93,19 @@ export default function MarketplacePage() {
         value: depositValue,
       });
 
+      setLockingStatusText('Mining on Ethereum Sepolia...');
+      let minedReceipt: any = null;
+      try {
+        minedReceipt = await waitForTransactionReceipt(wagmiConfig, {
+          hash: txHash,
+          timeout: 45000,
+        });
+      } catch (receiptErr) {
+        console.warn("waitForTransactionReceipt notice:", receiptErr);
+      }
+
+      setLockingStatusText('Recording Receipt in Supabase...');
+
       const modalData = {
         pass: p,
         bookingRef,
@@ -112,8 +130,8 @@ export default function MarketplacePage() {
         });
         localStorage.setItem('dsrm_user_bookings', JSON.stringify(stored));
 
-        // 1. Record receipt directly in Supabase PostgreSQL
-        recordBookingReceipt({
+        // 1. Record receipt directly in Supabase PostgreSQL (awaited for guaranteed persistence)
+        await recordBookingReceipt({
           id: bookingRef,
           booking_id: bookingId,
           user_address: address || '0xc25f9F0Ce27A2D248c43563a32cDC4886D069176',
@@ -128,16 +146,23 @@ export default function MarketplacePage() {
           metadata: {
             operator: p.operator,
             speed: p.speed,
-            cat: p.cat
+            cat: p.cat,
+            blockNumber: minedReceipt?.blockNumber ? Number(minedReceipt.blockNumber) : undefined,
+            gasUsed: minedReceipt?.gasUsed ? minedReceipt.gasUsed.toString() : undefined
           }
-        }).catch(err => console.error("Supabase booking persistence error:", err));
+        });
 
         // 2. Sync user profile with Supabase
         if (address) {
-          syncUserProfile(address).catch(err => console.error("Supabase profile sync error:", err));
+          await syncUserProfile(address);
         }
 
-        // 3. Register booking with the automated Oracle Relayer service
+        // 3. If this pass was a custom operator listing, mark it as BOOKED
+        if (p.operatorListingId) {
+          await updateOperatorListingStatus(p.operatorListingId, 'BOOKED');
+        }
+
+        // 4. Register booking with the automated Oracle Relayer service
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
         fetch(`${backendUrl}/api/v1/telemetry/register-booking`, {
           method: 'POST',
@@ -178,8 +203,10 @@ export default function MarketplacePage() {
         }
 
         if (operatorRes.status === 'fulfilled' && operatorRes.value?.success && operatorRes.value?.data?.length > 0) {
-          const operatorPasses: SatellitePass[] = operatorRes.value.data.map(op => ({
+          const availableOps = operatorRes.value.data.filter(op => op.status === 'AVAILABLE');
+          const operatorPasses: SatellitePass[] = availableOps.map(op => ({
             id: `OP-${op.id.slice(0, 8)}`,
+            operatorListingId: op.id,
             noradId: op.norad_id || undefined,
             name: op.satellite_name,
             operator: `${op.operator_name} (Operator Listing)`,
@@ -201,6 +228,21 @@ export default function MarketplacePage() {
       }
     }
     loadData();
+
+    const channel = supabase
+      .channel('marketplace_operator_listings')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'operator_listings' },
+        () => {
+          loadData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const executeSearch = async (searchQuery: string) => {
@@ -380,7 +422,7 @@ export default function MarketplacePage() {
               {lockingPassId === p.id ? (
                 <>
                   <span className="w-3.5 h-3.5 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin" />
-                  <span className="text-emerald-400 font-mono">Sign in Wallet (0.0001 ETH)...</span>
+                  <span className="text-emerald-400 font-mono">{lockingStatusText}</span>
                 </>
               ) : !isConnected ? (
                 <>

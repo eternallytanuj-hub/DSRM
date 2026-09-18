@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SatelliteEscrowArtifact from '@/contracts/SatelliteEscrow.json';
+import { supabase, BookingRecord } from '@/lib/supabase';
+import { fetchBookings } from '@/app/actions/supabase';
 
 interface EscrowItem {
   id: string;
@@ -90,24 +92,76 @@ export default function EscrowClearingPage() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem('dsrm_user_bookings') || '[]');
-      if (Array.isArray(stored) && stored.length > 0) {
-        const userItems: EscrowItem[] = stored.map((b: any) => ({
-          id: b.id,
-          bookingId: b.bookingId || '0x...',
-          target: b.sat || 'ORBITAL-PASS',
-          amount: b.amount || '0.00010 Sepolia ETH',
-          status: 'Locked',
-          depositTx: b.txHash || '',
-          window: b.time || '1 Hour Access Window',
-          quality: 'Awaiting Ground Station Telemetry Pass'
-        }));
-        setEscrows([...userItems, ...DEFAULT_ESCROWS]);
+    async function loadEscrows() {
+      try {
+        const res = await fetchBookings();
+        if (res.success && res.data && res.data.length > 0) {
+          const mapped: EscrowItem[] = res.data.map(b => {
+            const s = (b.status || 'ACTIVE').toUpperCase();
+            let status: 'Locked' | 'Released' | 'Partially Settled' | 'Refunded' = 'Locked';
+            if (s === 'SETTLED') status = 'Released';
+            else if (s === 'PARTIALLY_SETTLED') status = 'Partially Settled';
+            else if (s === 'REFUNDED') status = 'Refunded';
+
+            return {
+              id: b.id,
+              bookingId: b.booking_id || '0x...',
+              target: b.satellite,
+              amount: b.locked_amount,
+              status,
+              depositTx: b.tx_hash || '',
+              settleTx: b.settlement_tx_hash || undefined,
+              window: b.window_text || 'Active Window',
+              quality: status === 'Released' ? '98.5% (Nominal Telemetry Attested)' : status === 'Partially Settled' ? '84.0% (Atmospheric Packet Loss)' : status === 'Refunded' ? '0.0% (Telemetry Loss - Full Refund)' : 'Awaiting Ground Station Telemetry Pass',
+              payout: status === 'Released' ? `${b.locked_amount} (100%)` : status === 'Partially Settled' ? 'Partial Operator Payout' : '0 ETH (0%)',
+              refund: status === 'Refunded' ? `${b.locked_amount} (100% Buyer Refund)` : status === 'Partially Settled' ? 'Partial Buyer Refund' : '0 ETH (0%)'
+            };
+          });
+
+          setEscrows(mapped);
+          return;
+        }
+      } catch (e) {
+        console.error("Error loading escrows from Supabase:", e);
       }
-    } catch {
-      // Use defaults
+
+      // Fallback to localStorage + DEFAULT_ESCROWS
+      try {
+        const stored = JSON.parse(localStorage.getItem('dsrm_user_bookings') || '[]');
+        if (Array.isArray(stored) && stored.length > 0) {
+          const userItems: EscrowItem[] = stored.map((b: any) => ({
+            id: b.id,
+            bookingId: b.bookingId || '0x...',
+            target: b.sat || 'ORBITAL-PASS',
+            amount: b.amount || '0.00010 Sepolia ETH',
+            status: 'Locked',
+            depositTx: b.txHash || '',
+            window: b.time || '1 Hour Access Window',
+            quality: 'Awaiting Ground Station Telemetry Pass'
+          }));
+          setEscrows([...userItems, ...DEFAULT_ESCROWS]);
+        }
+      } catch {
+        // Use defaults
+      }
     }
+
+    loadEscrows();
+
+    const channel = supabase
+      .channel('escrow_clearing_bookings')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'bookings' },
+        () => {
+          loadEscrows();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleCopy = (text: string, key: string) => {

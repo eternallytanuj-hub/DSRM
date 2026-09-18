@@ -27,6 +27,7 @@ export default function MyBookingsPage() {
   const [activeTab, setActiveTab] = useState<'my' | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'SETTLED' | 'REFUNDED'>('ALL');
   const [liveSyncTime, setLiveSyncTime] = useState<string>('');
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   useEffect(() => {
     if (isConnected && address) {
@@ -42,7 +43,7 @@ export default function MyBookingsPage() {
         setBookings(res.data);
       }
 
-      const targetAddress = address || '0xc25f9F0Ce27A2D248c43563a32cDC4886D069176';
+      const targetAddress = (address || '0xc25f9F0Ce27A2D248c43563a32cDC4886D069176').toLowerCase();
       const profRes = await syncUserProfile(targetAddress);
       if (profRes.success && profRes.data) {
         setProfile(profRes.data);
@@ -68,7 +69,11 @@ export default function MyBookingsPage() {
           loadData();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          setIsRealtimeConnected(true);
+        }
+      });
 
     const interval = setInterval(() => {
       loadData();
@@ -80,13 +85,12 @@ export default function MyBookingsPage() {
     };
   }, [loadData]);
 
+  const activeUser = (address || '0xc25f9F0Ce27A2D248c43563a32cDC4886D069176').toLowerCase();
+
   const filteredBookings = bookings.filter(b => {
     if (activeTab === 'my') {
-      if (address) {
-        if (b.user_address.toLowerCase() !== address.toLowerCase()) return false;
-      } else {
-        if (b.user_address.toLowerCase() !== '0xc25f9f0ce27a2d248c43563a32cdc4886d069176') return false;
-      }
+      const bookingUser = (b.user_address || '').toLowerCase();
+      if (bookingUser !== activeUser) return false;
     }
 
     if (statusFilter !== 'ALL') {
@@ -159,7 +163,7 @@ export default function MyBookingsPage() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-xs font-mono text-white/70">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Supabase Live</span>
+            <span>{isRealtimeConnected ? 'Supabase Realtime Live' : 'Supabase Live'}</span>
             {liveSyncTime && <span className="text-white/30">({liveSyncTime})</span>}
           </div>
 
@@ -236,7 +240,7 @@ export default function MyBookingsPage() {
                 : 'text-white/50 hover:text-white/80'
             }`}
           >
-            My Wallet Bookings ({bookings.filter(b => b.user_address.toLowerCase() === (address || '0xc25f9F0Ce27A2D248c43563a32cDC4886D069176').toLowerCase()).length})
+            My Wallet Bookings ({bookings.filter(b => (b.user_address || '').toLowerCase() === activeUser).length})
           </button>
           <button
             onClick={() => setActiveTab('all')}
@@ -324,7 +328,7 @@ export default function MyBookingsPage() {
                       )}
                     </div>
                     <div className="text-[11px] font-mono text-white/30 mt-1 flex items-center gap-2">
-                      <span>User: {b.user_address.slice(0, 6)}...{b.user_address.slice(-4)}</span>
+                      <span>User: {(b.user_address || '0x0000000000000000000000000000000000000000').slice(0, 6)}...{(b.user_address || '0x0000000000000000000000000000000000000000').slice(-4)}</span>
                       {b.booking_id && (
                         <>
                           <span>•</span>

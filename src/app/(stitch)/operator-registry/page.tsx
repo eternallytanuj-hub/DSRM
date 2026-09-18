@@ -27,6 +27,7 @@ export default function OperatorRegistryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tierFilter, setTierFilter] = useState<'ALL' | 'VERIFIED' | 'TIER1'>('ALL');
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Form state
@@ -66,12 +67,19 @@ export default function OperatorRegistryPage() {
   useEffect(() => {
     loadData();
 
-    // Supabase realtime updates on operator listings
+    // Supabase realtime updates on both operator listings and profiles
     const channel = supabase
-      .channel('operator_listings_channel')
+      .channel('operator_registry_channel')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'operator_listings' },
+        () => {
+          loadData();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles' },
         () => {
           loadData();
         }
@@ -90,7 +98,7 @@ export default function OperatorRegistryPage() {
     setIsSubmitting(true);
     setSuccessMessage(null);
 
-    const operatorAddr = address || '0x1928374619283746192837461928374619283746';
+    const operatorAddr = (address || '0x1928374619283746192837461928374619283746').toLowerCase();
 
     const res = await createOperatorListing({
       ...form,
@@ -109,6 +117,12 @@ export default function OperatorRegistryPage() {
       alert(res.error || 'Failed to publish listing');
     }
   };
+
+  const filteredProfiles = profiles.filter(p => {
+    if (tierFilter === 'VERIFIED') return p.kyc_tier === 'Tier 2' || p.kyc_tier === 'Tier 3';
+    if (tierFilter === 'TIER1') return p.kyc_tier === 'Tier 1';
+    return true;
+  });
 
   return (
     <div className="space-y-10 animate-in fade-in duration-500 max-w-7xl mx-auto pb-12">
@@ -132,13 +146,47 @@ export default function OperatorRegistryPage() {
 
       {/* Verified Operator Profiles */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white/90">Verified Network Participants</h2>
-          <span className="text-xs font-mono text-white/40">Tier 2/3 Regulated Profiles</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-white/90">Network Participants & KYC Tiers</h2>
+            <p className="text-xs text-white/40 mt-0.5">Tier 1 anonymous terminals vs Tier 2/3 verified operators</p>
+          </div>
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs font-mono">
+            <button
+              onClick={() => setTierFilter('ALL')}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                tierFilter === 'ALL'
+                  ? 'bg-white/[0.1] text-white'
+                  : 'text-white/40 hover:text-white/70'
+              }`}
+            >
+              All ({profiles.length})
+            </button>
+            <button
+              onClick={() => setTierFilter('VERIFIED')}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                tierFilter === 'VERIFIED'
+                  ? 'bg-white/[0.1] text-white'
+                  : 'text-white/40 hover:text-white/70'
+              }`}
+            >
+              Tier 2/3 ({profiles.filter(p => p.kyc_tier === 'Tier 2' || p.kyc_tier === 'Tier 3').length})
+            </button>
+            <button
+              onClick={() => setTierFilter('TIER1')}
+              className={`px-2.5 py-1 rounded-lg transition-all ${
+                tierFilter === 'TIER1'
+                  ? 'bg-white/[0.1] text-white'
+                  : 'text-white/40 hover:text-white/70'
+              }`}
+            >
+              Tier 1 ({profiles.filter(p => p.kyc_tier === 'Tier 1').length})
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {profiles.filter(p => p.kyc_tier === 'Tier 2' || p.kyc_tier === 'Tier 3').map((op, i) => (
+          {filteredProfiles.map((op, i) => (
             <motion.div
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -154,13 +202,15 @@ export default function OperatorRegistryPage() {
                   <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium border ${
                     op.kyc_tier === 'Tier 3'
                       ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                      : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                      : op.kyc_tier === 'Tier 2'
+                      ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                      : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
                   }`}>
                     {op.kyc_tier} Verified
                   </span>
                 </div>
 
-                <h3 className="font-semibold text-white/95 text-base">{op.display_tag || 'Verified Operator'}</h3>
+                <h3 className="font-semibold text-white/95 text-base">{op.display_tag || 'Registered Profile'}</h3>
                 <p className="text-xs font-mono text-white/40 mt-1 truncate">
                   {op.wallet_address}
                 </p>
