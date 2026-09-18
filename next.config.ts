@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
       net: false,
       tls: false,
     };
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings || []),
+      /Module not found: Can't resolve/,
+    ];
     return config;
   },
   async rewrites() {

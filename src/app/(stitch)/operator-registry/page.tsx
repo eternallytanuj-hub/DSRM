@@ -5,15 +5,9 @@ import {
   Globe, 
   CheckCircle2, 
   Plus, 
-  Radio, 
-  Clock, 
-  Wifi, 
-  ShieldCheck, 
   X, 
   RefreshCw, 
-  ExternalLink,
-  ChevronRight,
-  Database
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
@@ -21,10 +15,9 @@ import { supabase, OperatorListing, Profile } from '@/lib/supabase';
 import { fetchOperatorListings, createOperatorListing, fetchProfiles } from '@/app/actions/supabase';
 
 export default function OperatorRegistryPage() {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [listings, setListings] = useState<OperatorListing[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tierFilter, setTierFilter] = useState<'ALL' | 'VERIFIED' | 'TIER1'>('ALL');
@@ -137,7 +130,7 @@ export default function OperatorRegistryPage() {
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] text-white text-xs font-medium border border-white/[0.12] transition-all flex items-center gap-2 shadow-sm w-fit"
+          className="px-4 py-2.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.14] text-white text-xs font-medium border border-white/[0.12] transition-all flex items-center gap-2 w-fit"
         >
           <Plus className="w-4 h-4" />
           <span>List Capacity Window</span>
@@ -295,7 +288,7 @@ export default function OperatorRegistryPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#0b0c10]/90 border border-white/[0.1] rounded-3xl p-6 max-w-lg w-full shadow-2xl space-y-6"
+              className="bg-[#0b0c10]/95 border border-white/[0.1] rounded-3xl p-6 max-w-lg w-full space-y-6"
             >
               <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                 <div>

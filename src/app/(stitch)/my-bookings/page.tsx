@@ -3,14 +3,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Calendar, 
-  Clock, 
   ExternalLink, 
-  ShieldCheck, 
   RefreshCw, 
   AlertCircle, 
   User, 
-  Radio, 
-  Database,
   ArrowUpRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -236,7 +232,7 @@ export default function MyBookingsPage() {
             onClick={() => setActiveTab('my')}
             className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${
               activeTab === 'my'
-                ? 'bg-white/[0.1] text-white shadow-sm'
+                ? 'bg-white/[0.1] text-white border border-white/[0.08]'
                 : 'text-white/50 hover:text-white/80'
             }`}
           >
@@ -246,7 +242,7 @@ export default function MyBookingsPage() {
             onClick={() => setActiveTab('all')}
             className={`px-4 py-2 rounded-xl text-xs font-medium transition-all ${
               activeTab === 'all'
-                ? 'bg-white/[0.1] text-white shadow-sm'
+                ? 'bg-white/[0.1] text-white border border-white/[0.08]'
                 : 'text-white/50 hover:text-white/80'
             }`}
           >

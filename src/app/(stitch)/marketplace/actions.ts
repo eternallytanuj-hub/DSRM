@@ -21,7 +21,7 @@ export async function searchMarketplaceWithGroq(query: string, candidates: Satel
         return data.passes;
       }
     }
-  } catch (backendErr) {
+  } catch {
     // Fallback to direct Groq API call below
   }
 

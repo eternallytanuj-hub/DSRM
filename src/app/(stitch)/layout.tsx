@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -30,15 +31,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[#07080C] text-white selection:bg-white/20 font-sans">
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-500/10 blur-[140px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-purple-500/10 blur-[140px]" />
-      </div>
-
       <div className="flex h-screen overflow-hidden">
         <aside className="w-64 flex-shrink-0 flex flex-col backdrop-blur-2xl bg-white/[0.02] border-r border-white/[0.05] relative z-10">
           <Link href="/" className="p-6 flex items-center gap-3 border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors group">
-            <img src="/DSRM_logo.png" alt="DSRM" className="w-8 h-8 object-contain" />
+            <Image src="/DSRM_logo.png" alt="DSRM" width={32} height={32} className="object-contain" />
             <div className="flex flex-col">
               <span className="font-semibold tracking-wide text-sm opacity-90">DSRM Network</span>
               <span className="text-[10px] text-white/40 font-mono">ORBITAL EXCHANGE</span>
@@ -53,10 +49,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                     active
-                      ? "bg-white/10 text-white shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"
-                      : "text-white/50 hover:text-white/90 hover:bg-white/[0.05]"
+                      ? "bg-white/10 text-white"
+                      : "text-white/50 hover:text-white/90 hover:bg-white/[0.04]"
                   }`}
                 >
                   <Icon className={`w-4 h-4 ${active ? "opacity-100" : "opacity-50"}`} />
@@ -70,7 +66,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <WalletButton />
             <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.05]">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)] animate-pulse" />
+                <div className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span className="text-xs text-white/60 font-mono">Sepolia Live</span>
               </div>
               <span className="text-[10px] text-white/40 font-mono">#11155111</span>

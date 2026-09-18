@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Activity, 
   Signal, 
   Radio, 
   ShieldCheck, 
@@ -11,7 +10,6 @@ import {
   Check, 
   RotateCw, 
   Satellite, 
-  Terminal, 
   CheckCircle2, 
   AlertTriangle,
   Play
@@ -575,7 +573,7 @@ export default function TelemetryOraclePage() {
       <section className="bg-white/[0.02] border border-white/[0.06] rounded-3xl p-6 backdrop-blur-xl">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(52,211,153,0.6)]" />
+            <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
             <h2 className="text-lg font-semibold text-white/90">SatNOGS / NOAA Ground Station Ingest Feed</h2>
           </div>
           <span className="text-xs font-mono text-emerald-400/80">LIVE TELEMETRY STREAM</span>

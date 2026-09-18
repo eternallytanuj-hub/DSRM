@@ -10,6 +10,7 @@ export interface SatellitePass {
   price: string;
   reason?: string;
   operatorListingId?: string;
+  operatorAddress?: string;
 }
 
 export const DEFAULT_REAL_PASSES: SatellitePass[] = [

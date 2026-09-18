@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Terminal, Code2, ExternalLink, Copy, Check, ShieldCheck } from 'lucide-react';
+import { Terminal, Code2, ExternalLink, Copy, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SatelliteEscrowArtifact from '@/contracts/SatelliteEscrow.json';
 
