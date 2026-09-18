@@ -24,6 +24,7 @@ import { parseEther, stringToHex, keccak256 } from 'viem';
 import { searchMarketplaceWithGroq } from './actions';
 import { DEFAULT_REAL_PASSES, SatellitePass } from './types';
 import SatelliteEscrowArtifact from '@/contracts/SatelliteEscrow.json';
+import { recordBookingReceipt, fetchOperatorListings, syncUserProfile } from '@/app/actions/supabase';
 
 const SAMPLE_QUERIES = [
   "High-speed broadband pass over South Asia / India",
@@ -111,7 +112,32 @@ export default function MarketplacePage() {
         });
         localStorage.setItem('dsrm_user_bookings', JSON.stringify(stored));
 
-        // Register booking with the automated Oracle Relayer service
+        // 1. Record receipt directly in Supabase PostgreSQL
+        recordBookingReceipt({
+          id: bookingRef,
+          booking_id: bookingId,
+          user_address: address || '0xc25f9F0Ce27A2D248c43563a32cDC4886D069176',
+          operator_address: operatorAddress,
+          satellite: p.name,
+          norad_id: p.noradId,
+          window_text: p.window || 'Active Window',
+          locked_amount: '0.0001 Sepolia ETH',
+          status: 'ACTIVE',
+          tx_hash: txHash,
+          etherscan_url: `https://sepolia.etherscan.io/tx/${txHash}`,
+          metadata: {
+            operator: p.operator,
+            speed: p.speed,
+            cat: p.cat
+          }
+        }).catch(err => console.error("Supabase booking persistence error:", err));
+
+        // 2. Sync user profile with Supabase
+        if (address) {
+          syncUserProfile(address).catch(err => console.error("Supabase profile sync error:", err));
+        }
+
+        // 3. Register booking with the automated Oracle Relayer service
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
         fetch(`${backendUrl}/api/v1/telemetry/register-booking`, {
           method: 'POST',
@@ -119,6 +145,7 @@ export default function MarketplacePage() {
           body: JSON.stringify({
             bookingRef,
             bookingId,
+            userAddress: address,
             satellite: p.name,
             operator: operatorAddress,
             txHash
@@ -138,17 +165,42 @@ export default function MarketplacePage() {
   };
 
   useEffect(() => {
-    fetch('https://dsrmbackend-production.up.railway.app/api/v1/marketplace/passes')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data && Array.isArray(data.passes) && data.passes.length > 0) {
-          setPasses(data.passes);
-          setInitialPasses(data.passes);
+    async function loadData() {
+      try {
+        const [backendRes, operatorRes] = await Promise.allSettled([
+          fetch('https://dsrmbackend-production.up.railway.app/api/v1/marketplace/passes').then(r => r.ok ? r.json() : null),
+          fetchOperatorListings()
+        ]);
+
+        let basePasses: SatellitePass[] = DEFAULT_REAL_PASSES;
+        if (backendRes.status === 'fulfilled' && backendRes.value?.passes?.length > 0) {
+          basePasses = backendRes.value.passes;
         }
-      })
-      .catch(() => {
+
+        if (operatorRes.status === 'fulfilled' && operatorRes.value?.success && operatorRes.value?.data?.length > 0) {
+          const operatorPasses: SatellitePass[] = operatorRes.value.data.map(op => ({
+            id: `OP-${op.id.slice(0, 8)}`,
+            noradId: op.norad_id || undefined,
+            name: op.satellite_name,
+            operator: `${op.operator_name} (Operator Listing)`,
+            cat: op.category?.toLowerCase() || 'communication',
+            speed: `${op.bandwidth || '500 Mbps'} (${op.band || 'Ku/Ka-Band'})`,
+            window: op.window_display || 'On-Demand Window',
+            price: op.price_eth || '0.0001 ETH'
+          }));
+
+          const combined = [...operatorPasses, ...basePasses];
+          setPasses(combined);
+          setInitialPasses(combined);
+        } else {
+          setPasses(basePasses);
+          setInitialPasses(basePasses);
+        }
+      } catch {
         // Fallback already set to DEFAULT_REAL_PASSES
-      });
+      }
+    }
+    loadData();
   }, []);
 
   const executeSearch = async (searchQuery: string) => {
@@ -432,10 +484,16 @@ export default function MarketplacePage() {
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
                 <a
+                  href="/my-bookings"
+                  className="py-3 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 hover:border-emerald-500/50 text-xs font-medium transition-all flex items-center justify-center gap-1.5"
+                >
+                  <span>My Bookings</span>
+                </a>
+                <a
                   href="/escrow-clearing"
                   className="py-3 px-4 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/[0.08] text-xs font-medium transition-all flex items-center justify-center gap-1.5"
                 >
-                  <span>Escrow & Clearing</span>
+                  <span>Clearing</span>
                 </a>
               </div>
             </motion.div>
