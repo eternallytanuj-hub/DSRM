@@ -2,10 +2,35 @@
 
 import React from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useConnect } from 'wagmi';
 import { ChevronDown, AlertCircle } from 'lucide-react';
 import { MetaMaskLogo, EthereumMonochrome } from './Web3Icons';
 
 export function WalletButton() {
+  const { connectAsync, connectors } = useConnect();
+
+  const handleDirectConnect = async (fallbackModal?: () => void) => {
+    try {
+      if (typeof window !== 'undefined' && (window as unknown as { ethereum?: unknown }).ethereum) {
+        const injectedConn = connectors.find(
+          (c) => c.id === 'injected' || c.id === 'metaMaskSDK' || c.id === 'metaMask' || c.id === 'io.metamask'
+        ) || connectors[0];
+
+        if (injectedConn) {
+          await connectAsync({ connector: injectedConn });
+          return;
+        }
+      }
+    } catch (err: unknown) {
+      const errorObj = err as { name?: string; code?: number };
+      if (errorObj?.name === 'UserRejectedRequestError' || errorObj?.code === 4001) {
+        return;
+      }
+      console.warn('Direct connect fell back to modal:', err);
+    }
+    if (fallbackModal) fallbackModal();
+  };
+
   return (
     <ConnectButton.Custom>
       {({
@@ -34,7 +59,7 @@ export function WalletButton() {
               if (!connected) {
                 return (
                   <button
-                    onClick={openConnectModal}
+                    onClick={() => handleDirectConnect(openConnectModal)}
                     type="button"
                     className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-white/[0.04] hover:bg-white/[0.08] text-white/90 border border-white/[0.08] hover:border-white/[0.16] transition-all"
                   >

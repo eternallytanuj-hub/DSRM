@@ -16,7 +16,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAccount, useChainId, useSwitchChain, useWriteContract } from 'wagmi';
+import { useAccount, useChainId, useConnect, useSwitchChain, useWriteContract } from 'wagmi';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { parseEther, stringToHex, keccak256 } from 'viem';
@@ -45,14 +45,36 @@ export default function MarketplacePage() {
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [passes, setPasses] = useState<SatellitePass[]>(DEFAULT_REAL_PASSES);
-  const [initialPasses, setInitialPasses] = useState<SatellitePass[]>(DEFAULT_REAL_PASSES);
 
   // Wagmi hooks
   const { isConnected, address } = useAccount();
   const chainId = useChainId();
+  const { connectAsync, connectors } = useConnect();
   const { switchChainAsync, isPending: isSwitchingChain } = useSwitchChain();
   const { writeContractAsync } = useWriteContract();
   const { openConnectModal } = useConnectModal();
+
+  const handleDirectConnect = async () => {
+    try {
+      if (typeof window !== 'undefined' && (window as unknown as { ethereum?: unknown }).ethereum) {
+        const injectedConn = connectors.find(
+          (c) => c.id === 'injected' || c.id === 'metaMaskSDK' || c.id === 'metaMask' || c.id === 'io.metamask'
+        ) || connectors[0];
+
+        if (injectedConn) {
+          await connectAsync({ connector: injectedConn });
+          return;
+        }
+      }
+    } catch (err: unknown) {
+      const errorObj = err as { name?: string; code?: number };
+      if (errorObj?.name === 'UserRejectedRequestError' || errorObj?.code === 4001) {
+        return;
+      }
+      console.warn('Direct connect fell back to modal:', err);
+    }
+    if (openConnectModal) openConnectModal();
+  };
 
   // Booking Modal State
   const [selectedPass, setSelectedPass] = useState<SatellitePass | null>(null);
@@ -590,9 +612,7 @@ export default function MarketplacePage() {
                     {!isConnected ? (
                       <button
                         type="button"
-                        onClick={() => {
-                          if (openConnectModal) openConnectModal();
-                        }}
+                        onClick={handleDirectConnect}
                         className="w-full py-3 px-4 rounded-xl text-xs font-medium bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/[0.12] transition-colors flex items-center justify-center gap-2.5"
                       >
                         <MetaMaskLogo className="w-4 h-4" />
