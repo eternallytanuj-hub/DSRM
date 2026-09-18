@@ -45,6 +45,7 @@ export default function MarketplacePage() {
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [passes, setPasses] = useState<SatellitePass[]>(DEFAULT_REAL_PASSES);
+  const [initialPasses, setInitialPasses] = useState<SatellitePass[]>(DEFAULT_REAL_PASSES);
 
   // Wagmi hooks
   const { isConnected, address } = useAccount();
@@ -355,13 +356,19 @@ export default function MarketplacePage() {
     setIsSearching(true);
     try {
       const results = await searchMarketplaceWithGroq(searchQuery, initialPasses);
-      if (results && results.length > 0) {
-        setPasses(results);
-      }
+      setPasses(results || []);
     } catch (e) {
       console.error("Marketplace search failed:", e);
+    } finally {
+      setIsSearching(false);
     }
-    setIsSearching(false);
+  };
+
+  const handleQueryChange = (val: string) => {
+    setQuery(val);
+    if (!val.trim()) {
+      setPasses(initialPasses);
+    }
   };
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -396,10 +403,23 @@ export default function MarketplacePage() {
           <input
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => handleQueryChange(e.target.value)}
             placeholder="Search passes (e.g., low latency pass over India tomorrow morning)..."
             className="flex-1 bg-transparent border-none outline-none text-white/90 placeholder:text-white/30 text-sm py-2.5 font-normal"
           />
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery('');
+                setPasses(initialPasses);
+              }}
+              className="p-1.5 mr-2 text-white/40 hover:text-white/80 transition-colors rounded-lg"
+              title="Clear search"
+            >
+              <X size={15} />
+            </button>
+          )}
           <button 
             type="submit"
             disabled={isSearching}
@@ -436,85 +456,114 @@ export default function MarketplacePage() {
       </div>
 
       {/* Satellite Pass Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
-        {passes.map((p, i) => (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.04, duration: 0.25 }}
-            key={p.id}
-            className="bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-5 transition-all duration-200 flex flex-col justify-between"
+      {passes.length === 0 ? (
+        <div className="py-16 text-center border border-white/[0.06] rounded-2xl bg-white/[0.01]">
+          <Satellite className="w-8 h-8 text-white/20 mx-auto mb-3" />
+          <h3 className="text-sm font-medium text-white/80">No satellite passes match this criteria</h3>
+          <p className="text-xs text-white/40 mt-1 max-w-sm mx-auto">
+            Try broadening your search query or selecting one of the suggested mission prompts above.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('');
+              setPasses(initialPasses);
+            }}
+            className="mt-4 px-4 py-2 bg-white/[0.06] hover:bg-white/[0.1] text-xs font-medium text-white rounded-xl border border-white/[0.08] transition-colors"
           >
-            <div>
-              {/* Card Header */}
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center border border-white/[0.08]">
-                    <Satellite className="text-white/80 w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white/95 text-sm tracking-tight">{p.name}</h3>
-                    <p className="text-xs text-white/40">{p.operator}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center justify-end gap-1 text-sm font-semibold text-white/90 font-mono">
-                    <EthereumDiamond className="w-3.5 h-3.5" />
-                    <span>{ESCROW_AMOUNT_ETH}</span>
-                  </div>
-                  <div className="text-[10px] text-white/40 font-mono">SEPOLIA ETH</div>
-                </div>
-              </div>
-
-              {/* Specs */}
-              <div className="space-y-2 my-4 pt-3 border-t border-white/[0.04]">
-                <div className="flex items-center justify-between text-xs text-white/70">
-                  <span className="flex items-center gap-1.5 text-white/40">
-                    <Clock className="w-3.5 h-3.5" />
-                    Window:
-                  </span>
-                  <span className="font-mono text-white/90">{p.window}</span>
-                </div>
-                <div className="flex items-center justify-between text-xs text-white/70">
-                  <span className="flex items-center gap-1.5 text-white/40">
-                    <Wifi className="w-3.5 h-3.5" />
-                    Throughput:
-                  </span>
-                  <span className="font-mono text-white/90">{p.speed}</span>
-                </div>
-                {p.alt && (
-                  <div className="flex items-center justify-between text-xs text-white/70">
-                    <span className="flex items-center gap-1.5 text-white/40">
-                      <Globe2 className="w-3.5 h-3.5" />
-                      Altitude:
-                    </span>
-                    <span className="font-mono text-white/90">{p.alt} km</span>
-                  </div>
-                )}
-                {p.noradId && (
-                  <div className="flex items-center justify-between text-xs text-white/70">
-                    <span className="flex items-center gap-1.5 text-white/40">
-                      <Radio className="w-3.5 h-3.5" />
-                      NORAD Cat ID:
-                    </span>
-                    <span className="font-mono text-white/50">#{p.noradId}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Action */}
-            <button
-              type="button"
-              onClick={() => handleOpenBooking(p)}
-              className="w-full mt-2 py-2.5 px-4 rounded-xl text-xs font-medium transition-colors flex items-center justify-center gap-2 bg-white/[0.04] hover:bg-white/[0.08] text-white/90 hover:text-white border border-white/[0.08] hover:border-white/[0.16]"
+            Reset Fleet Catalog
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
+          {passes.map((p, i) => (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.25 }}
+              key={p.id}
+              className="bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-5 transition-all duration-200 flex flex-col justify-between"
             >
-              <MetaMaskLogo className="w-3.5 h-3.5" />
-              <span>Book Pass ({ESCROW_AMOUNT_ETH} Sepolia ETH)</span>
-            </button>
-          </motion.div>
-        ))}
-      </div>
+              <div>
+                {/* Card Header */}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center border border-white/[0.08]">
+                      <Satellite className="text-white/80 w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-white/95 text-sm tracking-tight">{p.name}</h3>
+                      <p className="text-xs text-white/40">{p.operator}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center justify-end gap-1 text-sm font-semibold text-white/90 font-mono">
+                      <EthereumDiamond className="w-3.5 h-3.5" />
+                      <span>{ESCROW_AMOUNT_ETH}</span>
+                    </div>
+                    <div className="text-[10px] text-white/40 font-mono">SEPOLIA ETH</div>
+                  </div>
+                </div>
+
+                {/* Specs */}
+                <div className="space-y-2 my-4 pt-3 border-t border-white/[0.04]">
+                  <div className="flex items-center justify-between text-xs text-white/70">
+                    <span className="flex items-center gap-1.5 text-white/40">
+                      <Clock className="w-3.5 h-3.5" />
+                      Window:
+                    </span>
+                    <span className="font-mono text-white/90">{p.window}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-white/70">
+                    <span className="flex items-center gap-1.5 text-white/40">
+                      <Wifi className="w-3.5 h-3.5" />
+                      Throughput:
+                    </span>
+                    <span className="font-mono text-white/90">{p.speed}</span>
+                  </div>
+                  {p.alt && (
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <span className="flex items-center gap-1.5 text-white/40">
+                        <Globe2 className="w-3.5 h-3.5" />
+                        Altitude:
+                      </span>
+                      <span className="font-mono text-white/90">{p.alt} km</span>
+                    </div>
+                  )}
+                  {p.noradId && (
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <span className="flex items-center gap-1.5 text-white/40">
+                        <Radio className="w-3.5 h-3.5" />
+                        NORAD Cat ID:
+                      </span>
+                      <span className="font-mono text-white/50">#{p.noradId}</span>
+                    </div>
+                  )}
+                </div>
+
+                {p.reason && (
+                  <div className="mt-3 p-3 rounded-xl bg-white/[0.02] border border-emerald-500/20 text-xs text-white/75 leading-relaxed">
+                    <span className="text-emerald-400 font-mono text-[10px] uppercase tracking-wider block mb-1">
+                      Orbital Match Reason
+                    </span>
+                    {p.reason}
+                  </div>
+                )}
+              </div>
+
+              {/* Action */}
+              <button
+                type="button"
+                onClick={() => handleOpenBooking(p)}
+                className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs font-medium transition-colors flex items-center justify-center gap-2 bg-white/[0.04] hover:bg-white/[0.08] text-white/90 hover:text-white border border-white/[0.08] hover:border-white/[0.16]"
+              >
+                <MetaMaskLogo className="w-3.5 h-3.5" />
+                <span>Book Pass ({ESCROW_AMOUNT_ETH} Sepolia ETH)</span>
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Booking & Transaction Signing Modal */}
       <AnimatePresence>
