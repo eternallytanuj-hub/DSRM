@@ -790,7 +790,7 @@ export function TelemetryReplayView({
           </div>
         )}
 
-        {/* 7 Verification Steps with Per-Step Re-run */}
+        {/* Verification Steps with Per-Step Re-run */}
         <div className="space-y-2">
           {verification &&
             (
@@ -802,6 +802,7 @@ export function TelemetryReplayView({
                 "signatures",
                 "recompute_score",
                 "geometry",
+                "delivery_challenge",
               ] as VerificationStepId[]
             ).map((stepId, idx) => {
               const step = verification.steps[stepId];

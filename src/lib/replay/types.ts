@@ -75,6 +75,21 @@ export interface ProvenanceEntry {
   method?: string;
 }
 
+export interface BundleChallenge {
+  challengeId: `0x${string}`;
+  nonceHex: string;
+  openedAtMs: number;
+  deadlineMs: number;
+}
+
+export interface BundleDelivery {
+  bookingId: `0x${string}`;
+  buyer: `0x${string}`;
+  agreementNonce: string;
+  termsHash: `0x${string}`;
+  deliveryNonce: `0x${string}`;
+}
+
 export interface EvidenceBundle {
   schemaVersion: 1;
   bundleId: string;
@@ -85,6 +100,8 @@ export interface EvidenceBundle {
   series: BundleSeries;
   scoring: BundleScoringConfig;
   booking: BundleBooking;
+  challenge?: BundleChallenge;
+  delivery?: BundleDelivery;
   provenance: Record<string, ProvenanceEntry>;
 }
 
@@ -198,7 +215,8 @@ export type VerificationStepId =
   | "hash_comparison"
   | "signatures"
   | "recompute_score"
-  | "geometry";
+  | "geometry"
+  | "delivery_challenge";
 
 export type VerificationStepStatus =
   | "idle"

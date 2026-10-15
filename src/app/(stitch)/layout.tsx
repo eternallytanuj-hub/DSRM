@@ -14,6 +14,8 @@ import {
   Terminal 
 } from "lucide-react";
 import { WalletButton } from "@/components/WalletButton";
+import { DemoModeBanner } from "@/components/demo/DemoModeBanner";
+import { JudgeDemoSheet } from "@/components/demo/JudgeDemoSheet";
 import "../globals.css";
 
 const navLinks = [
@@ -74,10 +76,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </aside>
 
-        <main className="flex-1 overflow-y-auto relative z-0">
-          <div className="max-w-7xl mx-auto p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto relative z-0 flex flex-col">
+          <DemoModeBanner />
+          <div className="max-w-7xl mx-auto p-6 lg:p-8 flex-1 w-full">
             {children}
           </div>
+          <JudgeDemoSheet />
         </main>
       </div>
     </div>

@@ -107,6 +107,11 @@ export function createInitialVerificationSteps(): Record<VerificationStepId, Ver
       label: "Orbital Pass Geometry & Elevation Check",
       status: "idle",
     },
+    delivery_challenge: {
+      id: "delivery_challenge",
+      label: "Delivery / Control Challenge in Frames",
+      status: "idle",
+    },
   };
 }
 
@@ -339,6 +344,7 @@ export async function runVerification(
         "signatures",
         "recompute_score",
         "geometry",
+        "delivery_challenge",
       ];
       for (const bid of blockIds) {
         notify({
@@ -1032,6 +1038,144 @@ export async function runVerification(
     }
   }
 
+  // -------------------------------------------------------------
+  // STEP 8: Buyer-Bound Delivery Challenge / Operator Control Challenge
+  // -------------------------------------------------------------
+  if (shouldRun("delivery_challenge")) {
+    const t8 = performance.now();
+    try {
+      if (!loadedBundle) {
+        notify({
+          id: "delivery_challenge",
+          label: "Delivery / Control Challenge in Frames",
+          status: "blocked",
+          expected: "Prerequisite evidence bundle with telemetry frames",
+          actual: "Blocked: bundle not loaded",
+          detail: "Blocked: dependent on Step 1 (Fetch Evidence Bundle)",
+        });
+      } else if (loadedBundle.delivery) {
+        const del = loadedBundle.delivery;
+        const { encodeAbiParameters, parseAbiParameters } = await import("viem");
+        const expectedDeliveryNonce = keccak256(
+          encodeAbiParameters(
+            parseAbiParameters("bytes32, address, uint256, bytes32"),
+            [
+              del.bookingId,
+              del.buyer,
+              BigInt(del.agreementNonce),
+              del.termsHash,
+            ]
+          )
+        );
+
+        const elapsed8 = Math.round(performance.now() - t8);
+        if (del.deliveryNonce.toLowerCase() !== expectedDeliveryNonce.toLowerCase()) {
+          notify({
+            id: "delivery_challenge",
+            label: "Delivery / Control Challenge in Frames",
+            status: "fail",
+            elapsedMs: elapsed8,
+            expected: `Delivery challenge nonce ${expectedDeliveryNonce}`,
+            actual: `Declared nonce ${del.deliveryNonce} mismatch`,
+            error: "Declared delivery nonce does not match cryptographic derivation from agreement parameters.",
+          });
+        } else {
+          const nonceRaw = del.deliveryNonce.toLowerCase().replace(/^0x/, "");
+          const matchingFrame = loadedBundle.frames.find((f) =>
+            f.hex.toLowerCase().includes(nonceRaw)
+          );
+
+          if (matchingFrame) {
+            notify({
+              id: "delivery_challenge",
+              label: "Delivery / Control Challenge in Frames",
+              status: "pass",
+              elapsedMs: elapsed8,
+              expected: `Telemetry frame embedding challenge nonce ${del.deliveryNonce.slice(0, 10)}...`,
+              actual: `Delivery challenge nonce confirmed in frame #${matchingFrame.index}`,
+              detail: `Cryptographic proof of fresh transmission verified in telemetry frame #${matchingFrame.index} at ts ${matchingFrame.tsMs}ms.`,
+            });
+          } else {
+            notify({
+              id: "delivery_challenge",
+              label: "Delivery / Control Challenge in Frames",
+              status: "fail",
+              elapsedMs: elapsed8,
+              expected: `Telemetry frame embedding challenge nonce ${del.deliveryNonce.slice(0, 10)}...`,
+              actual: "Nonce absent from all telemetry frames",
+              error: "Passive replay fraud detected: None of the frames contain the buyer-bound challenge nonce.",
+            });
+          }
+        }
+      } else if (loadedBundle.challenge) {
+        const ch = loadedBundle.challenge;
+        const elapsed8 = Math.round(performance.now() - t8);
+        const nonceRaw = ch.nonceHex.toLowerCase().replace(/^0x/, "");
+        const matchingFrame = loadedBundle.frames.find((f) =>
+          f.hex.toLowerCase().includes(nonceRaw)
+        );
+
+        const staleFrames = loadedBundle.frames.filter(
+          (f) => f.tsMs < ch.openedAtMs || f.tsMs > ch.deadlineMs
+        );
+
+        if (staleFrames.length > 0) {
+          notify({
+            id: "delivery_challenge",
+            label: "Delivery / Control Challenge in Frames",
+            status: "fail",
+            elapsedMs: elapsed8,
+            expected: `All frames timestamped between ${ch.openedAtMs}ms and ${ch.deadlineMs}ms`,
+            actual: `${staleFrames.length} frames outside valid challenge window`,
+            error: "Tampered or stale timestamps: frames outside challenge window.",
+          });
+        } else if (!matchingFrame) {
+          notify({
+            id: "delivery_challenge",
+            label: "Delivery / Control Challenge in Frames",
+            status: "fail",
+            elapsedMs: elapsed8,
+            expected: `Frame embedding control nonce ${ch.nonceHex.slice(0, 10)}...`,
+            actual: "Control nonce absent from telemetry frames",
+            error: "Control proof failed: None of the recorded frames contain the challenge nonce.",
+          });
+        } else {
+          notify({
+            id: "delivery_challenge",
+            label: "Delivery / Control Challenge in Frames",
+            status: "pass",
+            elapsedMs: elapsed8,
+            expected: `Frame embedding control nonce ${ch.nonceHex.slice(0, 10)}...`,
+            actual: `Control nonce verified in frame #${matchingFrame.index}`,
+            detail: `On-chain challenge nonce embedded and verified inside frame #${matchingFrame.index} within challenge deadline.`,
+          });
+        }
+      } else {
+        const elapsed8 = Math.round(performance.now() - t8);
+        notify({
+          id: "delivery_challenge",
+          label: "Delivery / Control Challenge in Frames",
+          status: "pass",
+          elapsedMs: elapsed8,
+          expected: "Optional: active for booking-bound delivery or control challenges",
+          actual: "Not applicable: public replay, no booking-bound challenge",
+          detail: "This pass evidence was not captured under a buyer-bound delivery or control challenge.",
+        });
+      }
+    } catch (err) {
+      const elapsed8 = Math.round(performance.now() - t8);
+      notify({
+        id: "delivery_challenge",
+        label: "Delivery / Control Challenge in Frames",
+        status: "fail",
+        elapsedMs: elapsed8,
+        expected: "Delivery challenge verification",
+        actual: "Evaluation crashed",
+        error: (err as Error).message,
+      });
+    }
+  }
+
   return computeVerdict(
     steps,
     loadedBundle,
@@ -1102,17 +1246,17 @@ function computeVerdict(
 
     title = `Verification Failed (${passedCount}/${totalCount} checks passed) — ${issues.join(" | ")}`;
     description = `Cryptographic or orbital verification failed. ${issues.join(". ")}.`;
-  } else if (passedCount === 7) {
+  } else if (failCount === 0 && blockedCount === 0 && unconfiguredCount === 0 && passedCount === totalCount) {
     if (!allIndependent) {
       status = "warn";
-      title = "Verified (7/7 checks passed; cryptographically verified, attesters not independent)";
+      title = `Verified (${passedCount}/${totalCount} checks passed; cryptographically verified, attesters not independent)`;
       description =
-        "All 7 cryptographic, Merkle, scoring, and orbital geometry checks succeeded. Note: Attester signatures originate from DSRM-operated testnet nodes (non-independent).";
+        `All ${passedCount} cryptographic, Merkle, scoring, and orbital geometry checks succeeded. Note: Attester signatures originate from DSRM-operated testnet nodes (non-independent).`;
     } else {
       status = "pass";
-      title = "Verified (7/7 checks passed)";
+      title = `Verified (${passedCount}/${totalCount} checks passed)`;
       description =
-        "All 7 cryptographic commitments, on-chain signatures, deterministic settlement scores, and orbital geometry constraints are verified.";
+        `All ${passedCount} cryptographic commitments, on-chain signatures, deterministic settlement scores, and orbital geometry constraints are verified.`;
     }
   } else {
     status = "fail";

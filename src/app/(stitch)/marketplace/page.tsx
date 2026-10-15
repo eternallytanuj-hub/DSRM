@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   Search, 
   Satellite, 
@@ -13,7 +14,10 @@ import {
   AlertTriangle,
   X,
   Cpu,
-  ArrowRight
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAccount, useChainId, useConnect, useSwitchChain, useWriteContract } from 'wagmi';
@@ -28,6 +32,7 @@ import { recordBookingReceipt, fetchOperatorListings, syncUserProfile, updateOpe
 import { supabase } from '@/lib/supabase';
 import { wagmiConfig } from '@/components/Web3Provider';
 import { MetaMaskLogo, EthereumDiamond } from '@/components/Web3Icons';
+import { TierBadge } from '@/components/operators/TierBadge';
 
 const ESCROW_AMOUNT_ETH = '0.0005';
 const ESCROW_AMOUNT_DISPLAY = '0.0005 Sepolia ETH';
@@ -45,6 +50,8 @@ export default function MarketplacePage() {
   const [isSearching, setIsSearching] = useState(false);
   const [passes, setPasses] = useState<SatellitePass[]>(DEFAULT_REAL_PASSES);
   const [initialPasses, setInitialPasses] = useState<SatellitePass[]>(DEFAULT_REAL_PASSES);
+  const [tierFilter, setTierFilter] = useState<'ALL' | 0 | 1 | 2>('ALL');
+  const [expandedSummaryId, setExpandedSummaryId] = useState<string | null>(null);
 
   // Wagmi hooks
   const { isConnected, address } = useAccount();
@@ -453,18 +460,43 @@ export default function MarketplacePage() {
         ))}
       </div>
 
+      {/* Minimum Tier Filter Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+        <div className="flex items-center gap-2">
+          <span className="text-zinc-500 font-mono text-[11px]">MIN TIER:</span>
+          {(['ALL', 0, 1, 2] as const).map((t) => (
+            <button
+              key={String(t)}
+              type="button"
+              onClick={() => setTierFilter(t)}
+              className={`px-3 py-1 rounded-xl text-xs font-mono transition-colors ${
+                tierFilter === t
+                  ? 'bg-zinc-800 text-white'
+                  : 'bg-zinc-900/40 text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              {t === 'ALL' ? 'All Tiers' : t === 0 ? 'Tier 0+' : t === 1 ? 'Tier 1+' : 'Tier 2 Trusted'}
+            </button>
+          ))}
+        </div>
+        <span className="text-xs font-mono text-zinc-500">
+          Showing {passes.filter((p) => tierFilter === 'ALL' ? true : (p.tier ?? 0) >= tierFilter).length} of {passes.length} passes
+        </span>
+      </div>
+
       {/* Satellite Pass Grid */}
-      {passes.length === 0 ? (
+      {passes.filter((p) => tierFilter === 'ALL' ? true : (p.tier ?? 0) >= tierFilter).length === 0 ? (
         <div className="py-16 text-center border border-white/[0.06] rounded-2xl bg-white/[0.01]">
           <Satellite className="w-8 h-8 text-white/20 mx-auto mb-3" />
           <h3 className="text-sm font-medium text-white/80">No satellite passes match this criteria</h3>
           <p className="text-xs text-white/40 mt-1 max-w-sm mx-auto">
-            Try broadening your search query or selecting one of the suggested mission prompts above.
+            Try broadening your search query, lowering your minimum tier filter, or selecting one of the suggested mission prompts above.
           </p>
           <button
             type="button"
             onClick={() => {
               setQuery('');
+              setTierFilter('ALL');
               setPasses(initialPasses);
             }}
             className="mt-4 px-4 py-2 bg-white/[0.06] hover:bg-white/[0.1] text-xs font-medium text-white rounded-xl border border-white/[0.08] transition-colors"
@@ -474,92 +506,156 @@ export default function MarketplacePage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 pt-2">
-          {passes.map((p, i) => (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.04, duration: 0.25 }}
-              key={p.id}
-              className="bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-5 transition-all duration-200 flex flex-col justify-between"
-            >
-              <div>
-                {/* Card Header */}
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center border border-white/[0.08]">
-                      <Satellite className="text-white/80 w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white/95 text-sm tracking-tight">{p.name}</h3>
-                      <p className="text-xs text-white/40">{p.operator}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center justify-end gap-1 text-sm font-semibold text-white/90 font-mono">
-                      <EthereumDiamond className="w-3.5 h-3.5" />
-                      <span>{ESCROW_AMOUNT_ETH}</span>
-                    </div>
-                    <div className="text-[10px] text-white/40 font-mono">SEPOLIA ETH</div>
-                  </div>
-                </div>
-
-                {/* Specs */}
-                <div className="space-y-2 my-4 pt-3 border-t border-white/[0.04]">
-                  <div className="flex items-center justify-between text-xs text-white/70">
-                    <span className="flex items-center gap-1.5 text-white/40">
-                      <Clock className="w-3.5 h-3.5" />
-                      Window:
-                    </span>
-                    <span className="font-mono text-white/90">{p.window}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-white/70">
-                    <span className="flex items-center gap-1.5 text-white/40">
-                      <Wifi className="w-3.5 h-3.5" />
-                      Throughput:
-                    </span>
-                    <span className="font-mono text-white/90">{p.speed}</span>
-                  </div>
-                  {p.alt && (
-                    <div className="flex items-center justify-between text-xs text-white/70">
-                      <span className="flex items-center gap-1.5 text-white/40">
-                        <Globe2 className="w-3.5 h-3.5" />
-                        Altitude:
-                      </span>
-                      <span className="font-mono text-white/90">{p.alt} km</span>
-                    </div>
-                  )}
-                  {p.noradId && (
-                    <div className="flex items-center justify-between text-xs text-white/70">
-                      <span className="flex items-center gap-1.5 text-white/40">
-                        <Radio className="w-3.5 h-3.5" />
-                        NORAD Cat ID:
-                      </span>
-                      <span className="font-mono text-white/50">#{p.noradId}</span>
-                    </div>
-                  )}
-                </div>
-
-                {p.reason && (
-                  <div className="mt-3 p-3 rounded-xl bg-white/[0.02] border border-emerald-500/20 text-xs text-white/75 leading-relaxed">
-                    <span className="text-emerald-400 font-mono text-[10px] uppercase tracking-wider block mb-1">
-                      Orbital Match Reason
-                    </span>
-                    {p.reason}
-                  </div>
-                )}
-              </div>
-
-              {/* Action */}
-              <button
-                type="button"
-                onClick={() => handleOpenBooking(p)}
-                className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs font-medium transition-colors flex items-center justify-center gap-2 bg-white/[0.04] hover:bg-white/[0.08] text-white/90 hover:text-white border border-white/[0.08] hover:border-white/[0.16]"
+          {passes
+            .filter((p) => tierFilter === 'ALL' ? true : (p.tier ?? 0) >= tierFilter)
+            .map((p, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04, duration: 0.25 }}
+                key={p.id}
+                className="bg-white/[0.02] border border-white/[0.06] hover:border-white/[0.12] rounded-2xl p-5 transition-all duration-200 flex flex-col justify-between"
               >
-                <MetaMaskLogo className="w-3.5 h-3.5" />
-                <span>Book Pass ({ESCROW_AMOUNT_ETH} Sepolia ETH)</span>
-              </button>
-            </motion.div>
-          ))}
+                <div>
+                  {/* Card Header */}
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center border border-white/[0.08]">
+                        <Satellite className="text-white/80 w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-white/95 text-sm tracking-tight">{p.name}</h3>
+                          <TierBadge tier={p.tier ?? 0} isDemo={p.isDemo} />
+                        </div>
+                        <p className="text-xs text-white/40">{p.operator}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center justify-end gap-1 text-sm font-semibold text-white/90 font-mono">
+                        <EthereumDiamond className="w-3.5 h-3.5" />
+                        <span>{ESCROW_AMOUNT_ETH}</span>
+                      </div>
+                      <div className="text-[10px] text-white/40 font-mono">SEPOLIA ETH</div>
+                    </div>
+                  </div>
+
+                  {/* Specs */}
+                  <div className="space-y-2 my-4 pt-3 border-t border-white/[0.04]">
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <span className="flex items-center gap-1.5 text-white/40">
+                        <Clock className="w-3.5 h-3.5" />
+                        Window:
+                      </span>
+                      <span className="font-mono text-white/90">{p.window}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <span className="flex items-center gap-1.5 text-white/40">
+                        <Wifi className="w-3.5 h-3.5" />
+                        Throughput:
+                      </span>
+                      <span className="font-mono text-white/90">{p.speed}</span>
+                    </div>
+                    {p.alt && (
+                      <div className="flex items-center justify-between text-xs text-white/70">
+                        <span className="flex items-center gap-1.5 text-white/40">
+                          <Globe2 className="w-3.5 h-3.5" />
+                          Altitude:
+                        </span>
+                        <span className="font-mono text-white/90">{p.alt} km</span>
+                      </div>
+                    )}
+                    {p.noradId && (
+                      <div className="flex items-center justify-between text-xs text-white/70">
+                        <span className="flex items-center gap-1.5 text-white/40">
+                          <Radio className="w-3.5 h-3.5" />
+                          NORAD Cat ID:
+                        </span>
+                        <span className="font-mono text-white/50">#{p.noradId}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {p.reason && (
+                    <div className="mt-3 p-3 rounded-xl bg-white/[0.02] border border-emerald-500/20 text-xs text-white/75 leading-relaxed">
+                      <span className="text-emerald-400 font-mono text-[10px] uppercase tracking-wider block mb-1">
+                        Orbital Match Reason
+                      </span>
+                      {p.reason}
+                    </div>
+                  )}
+
+                  {/* Expandable Verification Summary */}
+                  <div className="mt-3 pt-3 border-t border-white/[0.04]">
+                    <button
+                      type="button"
+                      onClick={() => setExpandedSummaryId(expandedSummaryId === p.id ? null : p.id)}
+                      className="w-full flex items-center justify-between text-[11px] font-mono text-zinc-400 hover:text-zinc-200 transition-colors"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Shield className="w-3.5 h-3.5 text-zinc-500" />
+                        <span>Verification Summary</span>
+                      </span>
+                      {expandedSummaryId === p.id ? (
+                        <ChevronUp className="w-3.5 h-3.5 text-zinc-500" />
+                      ) : (
+                        <ChevronDown className="w-3.5 h-3.5 text-zinc-500" />
+                      )}
+                    </button>
+
+                    {expandedSummaryId === p.id && (
+                      <div className="mt-2.5 p-3 rounded-xl bg-zinc-900/60 space-y-2 text-[11px] font-mono">
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-500">KYB Entity:</span>
+                          <span className="text-emerald-400 font-medium">Attested</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-500">DNS TXT Domain:</span>
+                          <span className="text-emerald-400 font-medium">Verified</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-500">Control Proof:</span>
+                          <span className={p.tier && p.tier >= 1 ? 'text-emerald-400 font-medium' : 'text-zinc-500'}>
+                            {p.tier && p.tier >= 1 ? 'Confirmed Nonce' : 'Pending'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-500">Peer Vouches:</span>
+                          <span className="text-zinc-300">
+                            {p.verificationSummary?.vouches || (p.tier === 2 ? 2 : 1)} Independent
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-zinc-500">Regulatory License:</span>
+                          <span className={p.tier === 2 ? 'text-emerald-400 font-medium' : 'text-zinc-500'}>
+                            {p.tier === 2 ? 'Attested' : 'Not Required'}
+                          </span>
+                        </div>
+                        <div className="pt-1.5 border-t border-zinc-800">
+                          <Link
+                            href={`/operators/${p.operatorAddress || '0x1000000000000000000000000000000000000001'}`}
+                            className="text-[10px] text-zinc-300 hover:text-white flex items-center justify-between"
+                          >
+                            <span>View Pure Derivation Matrix</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Action */}
+                <button
+                  type="button"
+                  onClick={() => handleOpenBooking(p)}
+                  className="w-full mt-4 py-2.5 px-4 rounded-xl text-xs font-medium transition-colors flex items-center justify-center gap-2 bg-white/[0.04] hover:bg-white/[0.08] text-white/90 hover:text-white border border-white/[0.08] hover:border-white/[0.16]"
+                >
+                  <MetaMaskLogo className="w-3.5 h-3.5" />
+                  <span>Book Pass ({ESCROW_AMOUNT_ETH} Sepolia ETH)</span>
+                </button>
+              </motion.div>
+            ))}
         </div>
       )}
 
