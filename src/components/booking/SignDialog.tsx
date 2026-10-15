@@ -392,16 +392,16 @@ export function SignDialog({
   const contentBody = (
     <div className="space-y-4">
       {/* 2-Step Progress Header */}
-      <div className="space-y-2 p-3 rounded-xl border border-[#1F2433] bg-[#0c0e17]">
+      <div className="space-y-2 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02]">
         <div className="flex justify-between items-center text-xs font-mono">
-          <span className="text-[#9BA3B8] flex items-center gap-2">
+          <span className="text-white/70 flex items-center gap-2">
             <span
               className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
                 signature
-                  ? "bg-emerald-500 text-black font-bold"
+                  ? "bg-white text-black font-bold"
                   : state === "awaiting_signature" || state === "preparing" || state === "verifying"
-                  ? "bg-blue-600 text-white animate-pulse"
-                  : "bg-[#1F2433] text-[#9BA3B8]"
+                  ? "bg-white/30 text-white animate-pulse"
+                  : "bg-white/10 text-white/50"
               }`}
             >
               1
@@ -409,14 +409,14 @@ export function SignDialog({
             <span>1. EIP-712 Signature (Gasless)</span>
           </span>
 
-          <span className="text-[#9BA3B8] flex items-center gap-2">
+          <span className="text-white/70 flex items-center gap-2">
             <span
               className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${
                 state === "done"
-                  ? "bg-emerald-500 text-black font-bold"
+                  ? "bg-white text-black font-bold"
                   : state === "awaiting_wallet_tx" || state === "confirming" || state === "saving"
-                  ? "bg-blue-600 text-white animate-pulse"
-                  : "bg-[#1F2433] text-[#9BA3B8]"
+                  ? "bg-white/30 text-white animate-pulse"
+                  : "bg-white/10 text-white/50"
               }`}
             >
               2
@@ -446,16 +446,16 @@ export function SignDialog({
       {/* Code Preview of Typed Data */}
       {typedDataMessage && (
         <div className="space-y-1.5">
-          <div className="flex justify-between items-center text-[11px] font-mono text-[#9BA3B8]">
+          <div className="flex justify-between items-center text-[11px] font-mono text-white/60">
             <span className="flex items-center gap-1.5">
-              <Code2 className="h-3.5 w-3.5 text-blue-400" />
+              <Code2 className="h-3.5 w-3.5 text-white" />
               <span>EIP-712 Typed Data Payload (Decimal BigInts)</span>
             </span>
-            <Badge variant="outline" className="text-[10px]">
+            <Badge variant="outline" className="text-[10px] border-white/20 text-white/70">
               No PII Included
             </Badge>
           </div>
-          <pre className="max-h-40 overflow-y-auto rounded-lg border border-[#1F2433] bg-[#0c0e17] p-3 text-[11px] font-mono text-[#F0F3F8] scrollbar-thin">
+          <pre className="max-h-40 overflow-y-auto rounded-lg border border-white/[0.08] bg-black/50 p-3 text-[11px] font-mono text-white/80 scrollbar-thin">
             {JSON.stringify(formatMessageForDisplay(typedDataMessage), null, 2)}
           </pre>
         </div>
@@ -463,20 +463,20 @@ export function SignDialog({
 
       {/* Error / Warning Alert */}
       {errorMessage && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle className="text-xs font-mono">Execution Issue</AlertTitle>
-          <AlertDescription className="text-xs font-sans">
+        <Alert variant="destructive" className="border-white/20 bg-white/[0.02]">
+          <AlertCircle className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">Execution Issue</AlertTitle>
+          <AlertDescription className="text-xs font-sans text-white/70">
             {errorMessage}
           </AlertDescription>
         </Alert>
       )}
 
       {isDeadlineExpired && (
-        <Alert variant="warning">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle className="text-xs font-mono">Signature Deadline Expired</AlertTitle>
-          <AlertDescription className="text-xs font-sans">
+        <Alert variant="warning" className="border-white/20 bg-white/[0.02]">
+          <AlertCircle className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">Signature Deadline Expired</AlertTitle>
+          <AlertDescription className="text-xs font-sans text-white/70">
             The server-issued signature deadline has passed. Please re-sign to obtain a fresh nonce.
           </AlertDescription>
         </Alert>
@@ -484,12 +484,12 @@ export function SignDialog({
 
       {/* Success State */}
       {state === "done" && txHash && (
-        <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] space-y-3 font-mono text-xs">
-          <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+        <div className="p-4 rounded-xl border border-white/20 bg-white/[0.04] space-y-3 font-mono text-xs">
+          <div className="flex items-center gap-2 text-white font-semibold">
             <CheckCircle2 className="h-4 w-4" />
             <span>Escrow Locked on Sepolia</span>
           </div>
-          <div className="text-[#9BA3B8] text-xs">
+          <div className="text-white/70 text-xs">
             Booking reference: <span className="text-white">{scheduleData.bookingId}</span>
           </div>
           <div className="flex items-center justify-between pt-1">
@@ -497,13 +497,13 @@ export function SignDialog({
               href={`https://sepolia.etherscan.io/tx/${txHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:underline flex items-center gap-1"
+              className="text-white hover:underline flex items-center gap-1 font-mono"
             >
               <span>View On Etherscan</span>
               <ExternalLink className="h-3 w-3" />
             </a>
             {blockNumber && (
-              <span className="text-[#5A6275]">Block #{blockNumber}</span>
+              <span className="text-white/40">Block #{blockNumber}</span>
             )}
           </div>
         </div>
@@ -515,7 +515,7 @@ export function SignDialog({
           <Button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs"
+            className="w-full bg-white text-black hover:bg-white/90 font-mono text-xs h-10"
           >
             Complete & Return
           </Button>
@@ -528,7 +528,7 @@ export function SignDialog({
               state === "awaiting_signature" ||
               state === "verifying"
             }
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs flex items-center justify-center gap-2"
+            className="w-full bg-white text-black hover:bg-white/90 font-mono text-xs flex items-center justify-center gap-2 h-10 font-semibold"
           >
             {state === "preparing" ? (
               <>
@@ -563,7 +563,7 @@ export function SignDialog({
               state === "confirming" ||
               state === "saving"
             }
-            className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-xs flex items-center justify-center gap-2"
+            className="w-full bg-white text-black hover:bg-white/90 font-mono text-xs flex items-center justify-center gap-2 h-10 font-semibold"
           >
             {state === "awaiting_wallet_tx" ? (
               <>
@@ -595,12 +595,12 @@ export function SignDialog({
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="p-4 bg-[#0d0f18] border-[#1F2433]">
+        <DrawerContent className="p-4 bg-[#07080C] border-t border-white/10 text-white">
           <DrawerHeader className="text-left px-0 pt-0">
             <DrawerTitle className="text-sm font-mono text-white">
               EIP-712 Agreement Signing & Escrow
             </DrawerTitle>
-            <DrawerDescription className="text-xs text-[#9BA3B8]">
+            <DrawerDescription className="text-xs text-white/60">
               Sign gasless authorization and execute smart contract deposit.
             </DrawerDescription>
           </DrawerHeader>
@@ -612,12 +612,12 @@ export function SignDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg bg-[#0d0f18] border-[#1F2433]">
+      <DialogContent className="max-w-lg bg-[#07080C] border border-white/10 text-white backdrop-blur-2xl">
         <DialogHeader>
           <DialogTitle className="text-sm font-mono text-white">
             EIP-712 Agreement Signing & Escrow
           </DialogTitle>
-          <DialogDescription className="text-xs text-[#9BA3B8]">
+          <DialogDescription className="text-xs text-white/60">
             Sign gasless legal authorization and deposit escrow to lock your orbital pass.
           </DialogDescription>
         </DialogHeader>

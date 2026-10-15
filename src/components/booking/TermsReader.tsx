@@ -35,7 +35,7 @@ function renderInlineMarkdown(text: string): React.ReactNode[] {
       return (
         <code
           key={i}
-          className="rounded bg-[#191b25] px-1 py-0.5 font-mono text-[11px] text-blue-300 border border-[#1F2433]"
+          className="rounded bg-white/[0.04] px-1 py-0.5 font-mono text-[11px] text-white/90 border border-white/10"
         >
           {token.slice(1, -1)}
         </code>
@@ -43,7 +43,7 @@ function renderInlineMarkdown(text: string): React.ReactNode[] {
     }
     if (token.startsWith("*") && token.endsWith("*") && token.length >= 2) {
       return (
-        <em key={i} className="italic text-[#9BA3B8]">
+        <em key={i} className="italic text-white/60">
           {token.slice(1, -1)}
         </em>
       );
@@ -79,7 +79,7 @@ export function TermsReader({ content, className }: TermsReaderProps) {
     elements.push(
       <div
         key={`tbl-${key}`}
-        className="my-3 rounded-lg border border-[#1F2433] overflow-hidden bg-[#0c0e17]"
+        className="my-3 rounded-lg border border-white/[0.08] overflow-hidden bg-white/[0.02]"
       >
         <Table>
           <TableHeader>
@@ -134,7 +134,7 @@ export function TermsReader({ content, className }: TermsReaderProps) {
       elements.push(
         <h3
           key={`h3-${idx}`}
-          className="text-sm font-mono font-semibold text-white tracking-wide mt-4 mb-2 pb-1 border-b border-[#1F2433]"
+          className="text-sm font-mono font-semibold text-white tracking-wide mt-4 mb-2 pb-1 border-b border-white/[0.08]"
         >
           {renderInlineMarkdown(trimmed.slice(3))}
         </h3>

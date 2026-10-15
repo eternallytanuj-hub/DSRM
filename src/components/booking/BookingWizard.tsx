@@ -9,12 +9,15 @@ import {
   Shield,
   AlertTriangle,
   ExternalLink,
+  ArrowLeft,
+  FastForward,
 } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import { StepSchedule } from "./StepSchedule";
 import { StepTerms } from "./StepTerms";
 import { StepAcknowledgements } from "./StepAcknowledgements";
@@ -30,6 +33,8 @@ import { parseAgreementTerms } from "@/lib/agreement/terms";
 import { SatellitePass } from "@/app/(stitch)/marketplace/types";
 import { SEPOLIA_CHAIN_ID } from "@/lib/contracts/satelliteEscrow";
 import { RAW_AGREEMENT_MARKDOWN } from "@/content/legal/agreementText";
+import { generateBookingId } from "@/lib/agreement/hashes";
+import { parseEther } from "viem";
 
 interface BookingWizardProps {
   listing: SatellitePass;
@@ -63,6 +68,19 @@ export function BookingWizard({ listing }: BookingWizardProps) {
   const parsedTerms = React.useMemo(() => {
     return parseAgreementTerms(RAW_AGREEMENT_MARKDOWN);
   }, []);
+
+  // Listing price in wei
+  const listingPriceWei = React.useMemo(() => {
+    if (listing.price && listing.price.includes("ETH")) {
+      const match = listing.price.match(/([0-9.]+)/);
+      try {
+        return parseEther(match ? match[1] : "0.0001").toString();
+      } catch {
+        return parseEther("0.0001").toString();
+      }
+    }
+    return parseEther("0.0001").toString();
+  }, [listing.price]);
 
   // Restore draft from sessionStorage
   useEffect(() => {
@@ -127,6 +145,59 @@ export function BookingWizard({ listing }: BookingWizardProps) {
     }, 50);
   }, []);
 
+  // Demo Preset / Skip handler for 5-minute hackathon pitch
+  const handleDemoPreset = () => {
+    const nowSec = Math.floor(Date.now() / 1000);
+    const windowStartSec = nowSec + 3600;
+    const windowEndSec = nowSec + 5400;
+    const deadlineSec = nowSec + 1800;
+    const currentWallet = (address || "0x0000000000000000000000000000000000000000") as `0x${string}`;
+
+    const presetSchedule: ScheduleFormData = {
+      bookingId: generateBookingId(),
+      wallet: currentWallet,
+      buyerType: "Autonomous Agent",
+      isAgent: true,
+      legalName: "DSRM Autonomous Research Agent",
+      country: "US",
+      email: "agent@dsrm.network",
+      principalName: "Autonomous Space Research Lab",
+      principalAddress: "77 Innovation Way, Palo Alto, CA 94301",
+      targetRegion: "Global Ground Stations (LEO Uplink)",
+      frequencyBand: "Ku/Ka-Band",
+      minElevation: "15 degrees",
+      dataVolume: "25 GB nominal",
+      latencyTarget: "< 45 ms RTT",
+      intendedUseCategory: "Scientific research and education",
+      otherDescription: "",
+      windowStart: windowStartSec,
+      windowEnd: windowEndSec,
+      signatureDeadline: deadlineSec,
+      amountWei: listingPriceWei,
+    };
+
+    setScheduleData(presetSchedule);
+    setIsReadCompleted(true);
+    setReadTermsHash(parsedTerms.termsHash);
+
+    const nowIso = new Date().toISOString();
+    const presetAcks: Record<string, StoredAcknowledgement> = {
+      C1: { ticked: true, timestamp: nowIso },
+      C2: { ticked: true, timestamp: nowIso },
+      C3: { ticked: true, timestamp: nowIso },
+      C4: { ticked: true, timestamp: nowIso },
+      C5: { ticked: true, timestamp: nowIso },
+      C6: { ticked: true, timestamp: nowIso },
+      C7: { ticked: true, timestamp: nowIso },
+      C8: { ticked: true, timestamp: nowIso },
+      C9: { ticked: true, timestamp: nowIso },
+      C10: { ticked: true, timestamp: nowIso },
+    };
+    setAcknowledgements(presetAcks);
+    changeStep(4);
+    toast.success("Demo preset loaded: Ready for EIP-712 sign & escrow deposit");
+  };
+
   // Step 1 validation completion
   const handleScheduleSubmit = (data: ScheduleFormData) => {
     // If buyer type changed from agent to non-agent, drop C10 acknowledgement
@@ -144,9 +215,6 @@ export function BookingWizard({ listing }: BookingWizardProps) {
   // Step 1 value change invalidation
   const handleScheduleValuesChanged = () => {
     // Editing Step 1 invalidates Step 4 signature
-    if (activeStep > 1) {
-      // Keep acknowledgements unless buyer type changed
-    }
   };
 
   // Step 2 read completion
@@ -194,16 +262,26 @@ export function BookingWizard({ listing }: BookingWizardProps) {
   );
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-      {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#1F2433]">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono tracking-widest text-[#9BA3B8] uppercase">
-              Pre-Payment Agreement Engine
+    <div className="w-full space-y-6">
+      {/* Top Header Bar with Back Button & Skip/Demo Preset */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/[0.08]">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push("/marketplace")}
+              className="text-xs font-mono text-white/60 hover:text-white hover:bg-white/[0.05] h-8 px-2.5 -ml-2.5"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 mr-1.5" />
+              <span>Back to Marketplace</span>
+            </Button>
+            <span className="text-white/20">|</span>
+            <span className="text-[10px] font-mono tracking-widest text-white/50 uppercase">
+              Pre-Payment Agreement
             </span>
-            <span className="text-[#384259]">•</span>
-            <Badge variant="outline" className="font-mono text-[10px] text-blue-400 border-blue-500/30">
+            <Badge variant="outline" className="font-mono text-[10px] text-white/80 border-white/20 bg-white/[0.03]">
               Template v1.0
             </Badge>
           </div>
@@ -212,17 +290,28 @@ export function BookingWizard({ listing }: BookingWizardProps) {
           </h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleDemoPreset}
+            className="text-xs font-mono bg-white/[0.04] border-white/20 text-white hover:bg-white/10 hover:border-white/40 h-8 px-3"
+            title="Auto-fill verified parameters and skip directly to payment"
+          >
+            <FastForward className="w-3.5 h-3.5 mr-1.5" />
+            <span>Skip (Demo Preset)</span>
+          </Button>
           <ConnectButton />
         </div>
       </div>
 
       {/* Wallet Connection Gate Blocking Alert */}
       {!isConnected && (
-        <Alert variant="destructive" className="border-amber-500/40 bg-amber-950/20">
-          <AlertTriangle className="h-4 w-4 text-amber-400" />
-          <AlertTitle className="text-xs font-mono">Wallet Connection Required</AlertTitle>
-          <AlertDescription className="text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 font-sans">
+        <Alert variant="destructive" className="border-white/20 bg-white/[0.02]">
+          <AlertTriangle className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">Wallet Connection Required</AlertTitle>
+          <AlertDescription className="text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 font-sans text-white/70">
             <span>
               A connected Ethereum Web3 wallet is required to generate EIP-712 pre-payment booking agreements and execute escrow deposits on Sepolia.
             </span>
@@ -235,21 +324,21 @@ export function BookingWizard({ listing }: BookingWizardProps) {
 
       {/* Chain Gate Blocking Alert */}
       {isConnected && isWrongChain && (
-        <Alert variant="destructive" className="border-red-500/40 bg-red-950/20">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle className="text-xs font-mono">Wrong Network Detected</AlertTitle>
-          <AlertDescription className="text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 font-sans">
+        <Alert variant="destructive" className="border-white/20 bg-white/[0.02]">
+          <AlertTriangle className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">Wrong Network Detected</AlertTitle>
+          <AlertDescription className="text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-1 font-sans text-white/70">
             <span>
               Connected to Chain ID #{chainId}. The DSRM Escrow Contract and telemetry attestation
               service operate on Ethereum Sepolia (Chain ID 11155111).
             </span>
             <Button
               type="button"
-              variant="destructive"
+              variant="outline"
               size="sm"
               disabled={isSwitchingChain}
               onClick={() => switchChainAsync({ chainId: SEPOLIA_CHAIN_ID })}
-              className="shrink-0 font-mono text-xs"
+              className="shrink-0 font-mono text-xs bg-white text-black hover:bg-white/90 border-transparent"
             >
               {isSwitchingChain ? "Switching..." : "Switch to Sepolia"}
             </Button>
@@ -262,7 +351,7 @@ export function BookingWizard({ listing }: BookingWizardProps) {
         {/* Desktop Sidebar / Mobile Compact Top Bar */}
         <div className="lg:col-span-3 space-y-2">
           {/* Mobile Step Bar */}
-          <div className="lg:hidden flex items-center justify-between p-2 rounded-xl border border-[#1F2433] bg-[#0c0e17] text-xs font-mono overflow-x-auto">
+          <div className="lg:hidden flex items-center justify-between p-2 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs font-mono overflow-x-auto">
             {STEPS.map((s) => {
               const isActive = activeStep === s.id;
               const isPast = activeStep > s.id;
@@ -280,12 +369,12 @@ export function BookingWizard({ listing }: BookingWizardProps) {
                   onClick={() => changeStep(s.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] whitespace-nowrap transition-colors ${
                     isActive
-                      ? "bg-[#1d1f29] text-white border border-[#384259]"
+                      ? "bg-white text-black font-semibold"
                       : isPast
-                      ? "text-emerald-400"
+                      ? "text-white"
                       : isLocked
-                      ? "text-[#5A6275] cursor-not-allowed opacity-50"
-                      : "text-[#9BA3B8] hover:text-white"
+                      ? "text-white/30 cursor-not-allowed opacity-50"
+                      : "text-white/60 hover:text-white"
                   }`}
                 >
                   <span className="font-bold">{s.id}.</span>
@@ -296,8 +385,8 @@ export function BookingWizard({ listing }: BookingWizardProps) {
           </div>
 
           {/* Desktop Stepper Sidebar */}
-          <div className="hidden lg:block rounded-xl border border-[#1F2433] bg-[#0c0e17] p-4 space-y-3">
-            <span className="text-[10px] font-mono tracking-wider uppercase text-[#5A6275] block pb-2 border-b border-[#1F2433]">
+          <div className="hidden lg:block rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3">
+            <span className="text-[10px] font-mono tracking-wider uppercase text-white/40 block pb-2 border-b border-white/[0.08]">
               Workflow Progress
             </span>
 
@@ -321,21 +410,21 @@ export function BookingWizard({ listing }: BookingWizardProps) {
                     onClick={() => changeStep(s.id)}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all ${
                       isActive
-                        ? "bg-[#1d1f29] border border-blue-500/40 text-white shadow-sm"
+                        ? "bg-white text-black shadow-sm font-semibold"
                         : isPast
-                        ? "text-[#F0F3F8] hover:bg-white/[0.03] border border-transparent"
+                        ? "text-white hover:bg-white/[0.04]"
                         : isLocked
-                        ? "text-[#5A6275] opacity-40 cursor-not-allowed border border-transparent"
-                        : "text-[#9BA3B8] hover:text-white hover:bg-white/[0.02] border border-transparent"
+                        ? "text-white/30 opacity-40 cursor-not-allowed"
+                        : "text-white/60 hover:text-white hover:bg-white/[0.02]"
                     }`}
                   >
                     <div
                       className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 text-xs font-mono ${
                         isActive
-                          ? "bg-blue-600 text-white font-bold"
+                          ? "bg-black text-white font-bold"
                           : isPast
-                          ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                          : "bg-[#191b25] text-[#9BA3B8]"
+                          ? "bg-white/10 text-white border border-white/20"
+                          : "bg-white/5 text-white/40"
                       }`}
                     >
                       <Icon className="h-3.5 w-3.5" />
@@ -344,9 +433,9 @@ export function BookingWizard({ listing }: BookingWizardProps) {
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-mono font-medium truncate flex items-center justify-between">
                         <span>{s.title}</span>
-                        {isPast && <span className="text-[10px] text-emerald-400">Done</span>}
+                        {isPast && <span className="text-[10px] text-white/50">Done</span>}
                       </div>
-                      <div className="text-[10px] text-[#5A6275] truncate font-sans">
+                      <div className={`text-[10px] truncate font-sans ${isActive ? "text-black/70" : "text-white/40"}`}>
                         {s.sub}
                       </div>
                     </div>
@@ -355,7 +444,7 @@ export function BookingWizard({ listing }: BookingWizardProps) {
               })}
             </nav>
 
-            <div className="pt-3 border-t border-[#1F2433] text-[10px] text-[#5A6275] font-mono space-y-1">
+            <div className="pt-3 border-t border-white/[0.08] text-[10px] text-white/40 font-mono space-y-1">
               <div>Terms Hash: {parsedTerms.termsHash.slice(0, 10)}...</div>
               <div>Mode: EIP-712 Standard</div>
             </div>
@@ -366,41 +455,41 @@ export function BookingWizard({ listing }: BookingWizardProps) {
         <div
           ref={stepHeadingRef}
           tabIndex={-1}
-          className="lg:col-span-9 rounded-2xl border border-[#1F2433] bg-[#0d0f18] p-6 focus:outline-none"
+          className="lg:col-span-9 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 focus:outline-none"
         >
           {/* Completed State */}
           {completedBooking ? (
             <div className="space-y-6 text-center py-8 font-mono">
-              <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center mx-auto">
                 <CheckSquare className="h-6 w-6" />
               </div>
               <div className="space-y-1">
                 <h3 className="text-lg font-bold text-white">Booking Agreement Activated</h3>
-                <p className="text-xs text-[#9BA3B8] font-sans">
+                <p className="text-xs text-white/60 font-sans">
                   The pass has been successfully recorded in the DSRM decentralized registry and funds are locked in escrow.
                 </p>
               </div>
 
-              <div className="max-w-md mx-auto p-4 rounded-xl border border-[#1F2433] bg-[#0c0e17] text-left text-xs space-y-2">
+              <div className="max-w-md mx-auto p-4 rounded-xl border border-white/[0.08] bg-white/[0.02] text-left text-xs space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-[#5A6275]">Booking ID:</span>
+                  <span className="text-white/40">Booking ID:</span>
                   <span className="text-white truncate max-w-[220px]">{completedBooking.bookingRef}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#5A6275]">Tx Hash:</span>
+                  <span className="text-white/40">Tx Hash:</span>
                   <a
                     href={`https://sepolia.etherscan.io/tx/${completedBooking.txHash}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline flex items-center gap-1"
+                    className="text-white hover:underline flex items-center gap-1 font-mono"
                   >
                     <span>{completedBooking.txHash.slice(0, 10)}...</span>
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#5A6275]">Network:</span>
-                  <span className="text-emerald-400">Ethereum Sepolia (Active)</span>
+                  <span className="text-white/40">Network:</span>
+                  <span className="text-white">Ethereum Sepolia (Active)</span>
                 </div>
               </div>
 
@@ -409,14 +498,14 @@ export function BookingWizard({ listing }: BookingWizardProps) {
                   type="button"
                   variant="outline"
                   onClick={() => router.push("/my-bookings")}
-                  className="text-xs font-mono"
+                  className="text-xs font-mono border-white/20 text-white hover:bg-white/10"
                 >
                   Go to My Bookings
                 </Button>
                 <Button
                   type="button"
                   onClick={() => router.push("/marketplace")}
-                  className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-mono"
+                  className="bg-white text-black hover:bg-white/90 text-xs font-mono"
                 >
                   Return to Marketplace
                 </Button>

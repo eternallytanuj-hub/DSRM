@@ -102,13 +102,13 @@ function DateTimePickerField({
   };
 
   return (
-    <div className="space-y-2 p-3 rounded-lg border border-[#1F2433] bg-[#0c0e17]">
+    <div className="space-y-2 p-3 rounded-lg border border-white/[0.08] bg-white/[0.02]">
       <div className="flex justify-between items-center text-xs">
         <FormLabel className="text-xs font-mono font-medium text-white flex items-center gap-1.5">
-          <span className="text-blue-400 font-bold">{fieldNumber}:</span>
+          <span className="text-white font-bold">{fieldNumber}:</span>
           <span>{label}</span>
         </FormLabel>
-        <span className="text-[10px] font-mono text-[#9BA3B8] bg-[#11131c] px-2 py-0.5 rounded border border-[#1F2433]">
+        <span className="text-[10px] font-mono text-white/60 bg-white/[0.05] px-2 py-0.5 rounded border border-white/[0.08]">
           UTC
         </span>
       </div>
@@ -119,9 +119,9 @@ function DateTimePickerField({
             <Button
               variant="outline"
               type="button"
-              className="w-full justify-start text-left font-mono text-xs bg-[#11131c] border-[#1F2433] text-[#F0F3F8] hover:bg-[#191b25] h-9"
+              className="w-full justify-start text-left font-mono text-xs bg-white/[0.04] border-white/[0.08] text-white hover:bg-white/[0.08] h-9"
             >
-              <CalendarIcon className="mr-2 h-3.5 w-3.5 text-[#9BA3B8]" />
+              <CalendarIcon className="mr-2 h-3.5 w-3.5 text-white/60" />
               <span>{d.toISOString().slice(0, 10)}</span>
             </Button>
           </PopoverTrigger>
@@ -140,23 +140,23 @@ function DateTimePickerField({
         </Popover>
 
         <div className="flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5 text-[#9BA3B8] shrink-0" />
+          <Clock className="h-3.5 w-3.5 text-white/60 shrink-0" />
           <Input
             type="time"
             value={timeStr}
             onChange={handleTimeChange}
-            className="font-mono text-xs bg-[#11131c] border-[#1F2433] text-[#F0F3F8] h-9"
+            className="font-mono text-xs bg-white/[0.04] border-white/[0.08] text-white h-9"
             aria-label={`${label} time UTC`}
           />
         </div>
       </div>
 
-      <div className="text-[10px] font-mono text-[#9BA3B8] flex flex-wrap justify-between gap-1 pt-1 border-t border-[#1F2433]/50">
+      <div className="text-[10px] font-mono text-white/60 flex flex-wrap justify-between gap-1 pt-1 border-t border-white/[0.08]">
         <span>UTC: {d.toUTCString().slice(0, 22)} UTC</span>
         <span>Local: {d.toLocaleTimeString()}</span>
       </div>
       {helperText && (
-        <div className="text-[10px] text-[#5A6275]">{helperText}</div>
+        <div className="text-[10px] text-white/40">{helperText}</div>
       )}
     </div>
   );
@@ -295,24 +295,24 @@ export function StepSchedule({
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#1F2433] pb-4">
+      <div className="border-b border-white/[0.08] pb-4">
         <h2 className="text-sm font-semibold tracking-wider font-mono text-white flex items-center justify-between">
           <span>PART A: BOOKING SCHEDULE & SPECIFICATION</span>
-          <span className="text-[11px] text-[#9BA3B8] font-normal font-sans">
+          <span className="text-[11px] text-white/50 font-normal font-sans">
             Step 1 of 4
           </span>
         </h2>
-        <p className="text-xs text-[#9BA3B8] mt-1 font-sans">
+        <p className="text-xs text-white/60 mt-1 font-sans">
           Specify mission legal identity, technical parameters, and Schedule C acceptable use.
         </p>
       </div>
 
       {/* Country Sanctions Warning Banner */}
       {isBlocked && (
-        <Alert variant="destructive">
-          <ShieldAlert className="h-4 w-4" />
-          <AlertTitle>Sanctions Gate Restriction</AlertTitle>
-          <AlertDescription>
+        <Alert variant="destructive" className="border-white/20 bg-white/[0.02]">
+          <ShieldAlert className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">Sanctions Gate Restriction</AlertTitle>
+          <AlertDescription className="text-xs font-sans text-white/70">
             Selected country ({currentCountry}) is subject to comprehensive international sanctions.
             Bookings from restricted jurisdictions cannot proceed to agreement signing.
           </AlertDescription>
@@ -320,10 +320,10 @@ export function StepSchedule({
       )}
 
       {isHighRiskCountry && !isBlocked && (
-        <Alert variant="warning">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Enhanced Compliance Review</AlertTitle>
-          <AlertDescription>
+        <Alert variant="warning" className="border-white/20 bg-white/[0.02]">
+          <AlertTriangle className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">Enhanced Compliance Review</AlertTitle>
+          <AlertDescription className="text-xs font-sans text-white/70">
             The selected jurisdiction is designated high-risk. Additional export-control screening
             and operator clearance may be applied prior to pass execution.
           </AlertDescription>
@@ -333,60 +333,60 @@ export function StepSchedule({
       <Form {...form}>
         <form onSubmit={handleSubmit(onValidSubmit)} className="space-y-6">
           {/* Section 1: Read-Only Listing Parameters (A8, A9, A10, A14) */}
-          <div className="rounded-xl border border-[#1F2433] bg-[#0c0e17] p-4 space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between border-b border-[#1F2433]/50 pb-2">
-              <span className="text-[10px] uppercase tracking-wider text-[#5A6275] font-sans">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-3 font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+              <span className="text-[10px] uppercase tracking-wider text-white/40 font-sans">
                 Listing Parameters (Read-Only)
               </span>
-              <Badge variant="secondary" className="text-[10px]">
+              <Badge variant="outline" className="text-[10px] border-white/20 text-white/80 bg-white/[0.03]">
                 Server-Authoritative
               </Badge>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <div>
-                <span className="text-[10px] text-[#5A6275] block font-sans">A8: Satellite / Target</span>
+                <span className="text-[10px] text-white/40 block font-sans">A8: Satellite / Target</span>
                 <span className="text-white font-medium">{listing.name}</span>
                 {listing.noradId && (
-                  <span className="text-[#5A6275] ml-1">#{listing.noradId}</span>
+                  <span className="text-white/40 ml-1">#{listing.noradId}</span>
                 )}
               </div>
               <div>
-                <span className="text-[10px] text-[#5A6275] block font-sans">A8: Operator Wallet</span>
-                <span className="text-[#9BA3B8] text-[11px] truncate block" title={listing.operatorAddress || "0xc25f9F0Ce27A2D248c43563a32cDC4886D069176"}>
+                <span className="text-[10px] text-white/40 block font-sans">A8: Operator Wallet</span>
+                <span className="text-white/60 text-[11px] truncate block" title={listing.operatorAddress || "0xc25f9F0Ce27A2D248c43563a32cDC4886D069176"}>
                   {listing.operatorAddress ? `${listing.operatorAddress.slice(0, 6)}...${listing.operatorAddress.slice(-4)}` : "DSRM Operator Pool"}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] text-[#5A6275] block font-sans">A9: Service Type</span>
+                <span className="text-[10px] text-white/40 block font-sans">A9: Service Type</span>
                 <span className="text-white">LEO RF Downlink</span>
               </div>
               <div>
-                <span className="text-[10px] text-[#5A6275] block font-sans">A14: Escrow Price</span>
-                <span className="text-emerald-400 font-semibold">{listingPriceEth} ETH</span>
+                <span className="text-[10px] text-white/40 block font-sans">A14: Escrow Price</span>
+                <span className="text-white font-semibold">{listingPriceEth} ETH</span>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-[#1F2433]/50 flex flex-wrap items-center justify-between text-[11px]">
+            <div className="pt-2 border-t border-white/[0.08] flex flex-wrap items-center justify-between text-[11px]">
               <div>
-                <span className="text-[#5A6275]">A1: Booking ID: </span>
-                <span className="text-[#9BA3B8]">{defaultBookingId.slice(0, 10)}...{defaultBookingId.slice(-8)}</span>
+                <span className="text-white/40">A1: Booking ID: </span>
+                <span className="text-white/70">{defaultBookingId.slice(0, 10)}...{defaultBookingId.slice(-8)}</span>
               </div>
               <div>
-                <span className="text-[#5A6275]">A2: Signer Wallet: </span>
+                <span className="text-white/40">A2: Signer Wallet: </span>
                 <span className="text-white">{connectedWallet.slice(0, 6)}...{connectedWallet.slice(-4)}</span>
               </div>
             </div>
           </div>
 
           {/* Section 2: Buyer Legal Identity (A3, A4, A5, A6, A7) */}
-          <div className="rounded-xl border border-[#1F2433] bg-[#11131c] p-4 space-y-4">
-            <div className="flex items-center justify-between border-b border-[#1F2433] pb-2">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
               <span className="text-xs font-mono font-semibold text-white tracking-wide">
                 1. BUYER LEGAL IDENTITY & JURISDICTION
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] text-[#9BA3B8] font-mono">Autonomous Agent Mode</span>
+                <span className="text-[11px] text-white/60 font-mono">Autonomous Agent Mode</span>
                 <Switch
                   checked={isAgent}
                   onCheckedChange={handleAgentToggle}
@@ -396,10 +396,10 @@ export function StepSchedule({
             </div>
 
             {isAgent && (
-              <Alert variant="info" className="py-2.5">
-                <Cpu className="h-4 w-4" />
-                <AlertTitle className="text-xs font-mono">Autonomous Agent Signer Active</AlertTitle>
-                <AlertDescription className="text-xs font-sans">
+              <Alert variant="info" className="py-2.5 border-white/20 bg-white/[0.02]">
+                <Cpu className="h-4 w-4 text-white" />
+                <AlertTitle className="text-xs font-mono text-white">Autonomous Agent Signer Active</AlertTitle>
+                <AlertDescription className="text-xs font-sans text-white/70">
                   Per Article 3.7 and Schedule D: Where an autonomous agent signs on-chain,
                   the human or corporate Principal warrants full liability. Principal name and
                   legal address are strictly mandatory.
@@ -420,7 +420,7 @@ export function StepSchedule({
                       value={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white/[0.04] border-white/[0.08] text-white">
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                       </FormControl>
@@ -443,7 +443,7 @@ export function StepSchedule({
                   <FormItem>
                     <FormLabel>A4: Legal Name / Entity Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Acme Aerospace Ltd or Satoshi Nakamoto" {...field} />
+                      <Input placeholder="e.g. Acme Aerospace Ltd or Satoshi Nakamoto" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -458,7 +458,7 @@ export function StepSchedule({
                     <FormLabel>A5: Jurisdiction (Country)</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-white/[0.04] border-white/[0.08] text-white">
                           <SelectValue placeholder="Select country" />
                         </SelectTrigger>
                       </FormControl>
@@ -483,9 +483,9 @@ export function StepSchedule({
                 <FormItem>
                   <FormLabel>A6: Contact Email for Legal Notices</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="legal-notices@domain.com" {...field} />
+                    <Input type="email" placeholder="legal-notices@domain.com" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                   </FormControl>
-                  <FormDescription>
+                  <FormDescription className="text-white/40">
                     Official email address used for dispute notices and performance certificates.
                   </FormDescription>
                   <FormMessage />
@@ -495,17 +495,17 @@ export function StepSchedule({
 
             {/* A7: Required if Autonomous Agent */}
             {isAgent && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 rounded-lg border border-blue-500/20 bg-blue-500/[0.03]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 rounded-lg border border-white/10 bg-white/[0.02]">
                 <FormField
                   control={form.control}
                   name="principalName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-blue-300">
+                      <FormLabel className="text-white">
                         A7: Principal Name (Responsible Human / Corp)
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Full legal name of human operator" {...field} />
+                        <Input placeholder="Full legal name of human operator" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -517,11 +517,11 @@ export function StepSchedule({
                   name="principalAddress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-blue-300">
+                      <FormLabel className="text-white">
                         A7: Principal Legal Address
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Physical registered address & jurisdiction" {...field} />
+                        <Input placeholder="Physical registered address & jurisdiction" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -532,8 +532,8 @@ export function StepSchedule({
           </div>
 
           {/* Section 3: Technical Parameters & Timing (A10, A11, A12, A17) */}
-          <div className="rounded-xl border border-[#1F2433] bg-[#11131c] p-4 space-y-4">
-            <span className="text-xs font-mono font-semibold text-white tracking-wide block border-b border-[#1F2433] pb-2">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4">
+            <span className="text-xs font-mono font-semibold text-white tracking-wide block border-b border-white/[0.08] pb-2">
               2. TECHNICAL PASS PARAMETERS & TIMING
             </span>
 
@@ -545,7 +545,7 @@ export function StepSchedule({
                   <FormItem>
                     <FormLabel>A11: Target Ground Station or Region</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Svalbard Ground Station / 78.22° N, 15.40° E" {...field} />
+                      <Input placeholder="e.g. Svalbard Ground Station / 78.22° N, 15.40° E" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -559,7 +559,7 @@ export function StepSchedule({
                   <FormItem>
                     <FormLabel>A12: Frequency Band</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. Ku/Ka-Band Downlink (11.7 - 12.2 GHz)" {...field} />
+                      <Input placeholder="e.g. Ku/Ka-Band Downlink (11.7 - 12.2 GHz)" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -575,7 +575,7 @@ export function StepSchedule({
                   <FormItem>
                     <FormLabel>Minimum Elevation</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. 15°" {...field} />
+                      <Input placeholder="e.g. 15°" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -589,7 +589,7 @@ export function StepSchedule({
                   <FormItem>
                     <FormLabel>Data Volume</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. 25 GB nominal" {...field} />
+                      <Input placeholder="e.g. 25 GB nominal" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -603,7 +603,7 @@ export function StepSchedule({
                   <FormItem>
                     <FormLabel>Latency Target</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g. < 45 ms RTT" {...field} />
+                      <Input placeholder="e.g. < 45 ms RTT" className="bg-white/[0.04] border-white/[0.08] text-white" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -648,9 +648,9 @@ export function StepSchedule({
                   helperText={`Valid for ~${Math.max(0, Math.round((signatureDeadline - Math.floor(Date.now() / 1000)) / 60))} minutes. Max: earlier of now+24h and window start.`}
                 />
 
-                <div className="p-3 rounded-lg border border-[#1F2433] bg-[#0c0e17] flex flex-col justify-center text-xs space-y-1">
+                <div className="p-3 rounded-lg border border-white/[0.08] bg-white/[0.02] flex flex-col justify-center text-xs space-y-1">
                   <span className="font-mono text-white text-[11px] font-medium">Timing & Availability Rules</span>
-                  <p className="text-[10px] text-[#9BA3B8] leading-relaxed">
+                  <p className="text-[10px] text-white/50 leading-relaxed font-sans">
                     Pass windows are scheduled in UTC. The signature deadline enforces smart contract and backend freshness: signatures cannot be submitted after the deadline.
                   </p>
                 </div>
@@ -659,8 +659,8 @@ export function StepSchedule({
           </div>
 
           {/* Section 4: Schedule C Acceptable Use Declaration */}
-          <div className="rounded-xl border border-[#1F2433] bg-[#11131c] p-4 space-y-4">
-            <span className="text-xs font-mono font-semibold text-white tracking-wide block border-b border-[#1F2433] pb-2">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 space-y-4">
+            <span className="text-xs font-mono font-semibold text-white tracking-wide block border-b border-white/[0.08] pb-2">
               3. SCHEDULE C: ACCEPTABLE USE & EXPORT DECLARATION
             </span>
 
@@ -679,16 +679,16 @@ export function StepSchedule({
                       {SCHEDULE_C_CATEGORIES.map((cat) => (
                         <div
                           key={cat.id}
-                          className="flex items-center space-x-2 rounded-lg border border-[#1F2433] bg-[#0c0e17] p-3 hover:border-[#384259] transition-colors"
+                          className="flex items-center space-x-2 rounded-lg border border-white/[0.08] bg-white/[0.02] p-3 hover:border-white/20 transition-colors"
                         >
                           <RadioGroupItem value={cat.label} id={cat.id} />
                           <label
                             htmlFor={cat.id}
-                            className="text-xs font-mono text-[#F0F3F8] cursor-pointer flex-1"
+                            className="text-xs font-mono text-white cursor-pointer flex-1"
                           >
                             {cat.label}
                             {cat.highRisk && (
-                              <span className="ml-2 text-[10px] text-amber-400 font-sans">
+                              <span className="ml-2 text-[10px] text-white/50 font-sans">
                                 (Review)
                               </span>
                             )}
@@ -703,10 +703,10 @@ export function StepSchedule({
             />
 
             {isCategoryRisk && !isOtherCategory && (
-              <Alert variant="warning" className="py-2.5">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle className="text-xs font-mono">Specialized Regulatory Clearance</AlertTitle>
-                <AlertDescription className="text-xs font-sans">
+              <Alert variant="warning" className="py-2.5 border-white/20 bg-white/[0.02]">
+                <AlertTriangle className="h-4 w-4 text-white" />
+                <AlertTitle className="text-xs font-mono text-white">Specialized Regulatory Clearance</AlertTitle>
+                <AlertDescription className="text-xs font-sans text-white/70">
                   The selected category ({currentCategory}) may be subject to dual-use export control
                   scrutiny under Article 11. The Buyer warrants no military end-use.
                 </AlertDescription>
@@ -714,12 +714,12 @@ export function StepSchedule({
             )}
 
             {isOtherCategory && (
-              <div className="space-y-3 p-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.04]">
-                <Alert variant="warning" className="py-2">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertTitle className="text-xs font-mono">Manual Platform Approval Required</AlertTitle>
-                  <AlertDescription className="text-xs font-sans">
-                    Category "Other" flags <code className="font-mono text-amber-300">requiresManualApproval = true</code>.
+              <div className="space-y-3 p-3 rounded-lg border border-white/10 bg-white/[0.02]">
+                <Alert variant="warning" className="py-2 border-white/20 bg-white/[0.02]">
+                  <AlertTriangle className="h-4 w-4 text-white" />
+                  <AlertTitle className="text-xs font-mono text-white">Manual Platform Approval Required</AlertTitle>
+                  <AlertDescription className="text-xs font-sans text-white/70">
+                    Category "Other" flags <code className="font-mono text-white/80">requiresManualApproval = true</code>.
                     Detailed mission scope description is required for compliance screening.
                   </AlertDescription>
                 </Alert>
@@ -729,12 +729,13 @@ export function StepSchedule({
                   name="otherDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-amber-300">
+                      <FormLabel className="text-white">
                         Detailed Description of Intended Use (Minimum 10 characters)
                       </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Provide detailed description of payload operations, receiving equipment, and mission intent..."
+                          className="bg-white/[0.04] border-white/[0.08] text-white"
                           {...field}
                         />
                       </FormControl>
@@ -750,7 +751,7 @@ export function StepSchedule({
             <Button
               type="submit"
               disabled={isBlocked || !formState.isValid}
-              className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs"
+              className="px-6 py-2.5 bg-white text-black hover:bg-white/90 font-mono text-xs font-semibold"
             >
               Save Schedule & Review Terms
             </Button>

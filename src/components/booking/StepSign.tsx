@@ -96,14 +96,14 @@ export function StepSign({
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#1F2433] pb-4">
+      <div className="border-b border-white/[0.08] pb-4">
         <h2 className="text-sm font-semibold tracking-wider font-mono text-white flex items-center justify-between">
           <span>PART D: SIGN & ESCROW DEPOSIT</span>
-          <span className="text-[11px] text-[#9BA3B8] font-normal font-sans">
+          <span className="text-[11px] text-white/50 font-normal font-sans">
             Step 4 of 4
           </span>
         </h2>
-        <p className="text-xs text-[#9BA3B8] mt-1 font-sans">
+        <p className="text-xs text-white/50 mt-1 font-sans">
           Review the complete booking summary and execute the cryptographic agreement signature
           followed by the Sepolia escrow deposit.
         </p>
@@ -111,12 +111,12 @@ export function StepSign({
 
       {/* Resumed Agreement Alert */}
       {resumedAgreement && (
-        <Alert variant="info">
-          <ShieldCheck className="h-4 w-4" />
-          <AlertTitle className="text-xs font-mono">
+        <Alert variant="info" className="border-white/20 bg-white/[0.03]">
+          <ShieldCheck className="h-4 w-4 text-white" />
+          <AlertTitle className="text-xs font-mono text-white">
             Active Agreement Restored
           </AlertTitle>
-          <AlertDescription className="text-xs font-sans">
+          <AlertDescription className="text-xs font-sans text-white/60">
             A verified, unexpired agreement signature was located for this booking. You can resume
             directly at the escrow deposit step without re-signing.
           </AlertDescription>
@@ -137,12 +137,12 @@ export function StepSign({
         chainId={chainId}
       />
 
-      <div className="flex items-center justify-between pt-4 border-t border-[#1F2433]">
+      <div className="flex items-center justify-between pt-4 border-t border-white/[0.08]">
         <Button
           type="button"
           variant="outline"
           onClick={onBack}
-          className="px-4 py-2 text-xs font-mono flex items-center gap-2"
+          className="px-4 py-2 text-xs font-mono flex items-center gap-2 border-white/20 text-white hover:bg-white/[0.06] rounded-xl"
         >
           <ArrowLeft className="h-3.5 w-3.5" />
           <span>Back to Acknowledgements</span>
@@ -152,7 +152,7 @@ export function StepSign({
           type="button"
           onClick={() => setDialogOpen(true)}
           disabled={isCheckingResume}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs flex items-center gap-2"
+          className="px-6 py-2.5 bg-white text-black hover:bg-white/90 font-mono text-xs font-medium rounded-xl flex items-center gap-2 transition-colors"
         >
           {isCheckingResume ? (
             <>

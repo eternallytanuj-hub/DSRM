@@ -93,28 +93,28 @@ export function StepTerms({
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#1F2433] pb-4">
+      <div className="border-b border-white/[0.08] pb-4">
         <h2 className="text-sm font-semibold tracking-wider font-mono text-white flex items-center justify-between">
           <span>PART B: TERMS & SCHEDULES</span>
-          <span className="text-[11px] text-[#9BA3B8] font-normal font-sans">
+          <span className="text-[11px] text-white/50 font-normal font-sans">
             Step 2 of 4
           </span>
         </h2>
-        <p className="text-xs text-[#9BA3B8] mt-1 font-sans">
+        <p className="text-xs text-white/50 mt-1 font-sans">
           Review the binding legal terms, performance metrics, and settlement rules for satellite pass execution.
         </p>
       </div>
 
       {/* Metadata Badges Bar */}
-      <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-[#1F2433] bg-[#0c0e17] text-xs">
+      <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs">
         <HashBadge label="Terms Hash" value={parsedTerms.termsHash} truncateLength={8} />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-mono text-[#9BA3B8]">IPFS CID:</span>
+          <span className="text-[10px] font-mono text-white/50">IPFS CID:</span>
           {ipfsCid ? (
             <HashBadge value={ipfsCid} truncateLength={8} />
           ) : (
-            <Badge variant="secondary" className="font-mono text-[10px] text-[#9BA3B8] border-[#1F2433]">
+            <Badge variant="secondary" className="font-mono text-[10px] text-white/50 border-white/10 bg-white/[0.02]">
               Not pinned
             </Badge>
           )}
@@ -179,7 +179,7 @@ export function StepTerms({
 
       {/* Key Terms Chips Row */}
       <div className="space-y-2">
-        <span className="text-[11px] font-mono text-[#9BA3B8] uppercase tracking-wider block">
+        <span className="text-[11px] font-mono text-white/50 uppercase tracking-wider block">
           Key Terms Navigation:
         </span>
         <div className="flex flex-wrap gap-2">
@@ -188,7 +188,7 @@ export function StepTerms({
               key={item.num}
               type="button"
               onClick={() => handleKeyTermClick(item.num)}
-              className="py-1 px-2.5 rounded-md border border-[#1F2433] bg-[#11131c] hover:bg-white/[0.06] hover:border-[#384259] text-[11px] font-mono text-[#F0F3F8] transition-colors"
+              className="py-1 px-2.5 rounded-md border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20 text-[11px] font-mono text-white/80 transition-colors"
             >
               {item.label}
             </button>
@@ -197,15 +197,15 @@ export function StepTerms({
       </div>
 
       {/* View Toggle: Accordion vs Full Text */}
-      <div className="flex items-center justify-between border-b border-[#1F2433] pb-2">
+      <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={() => setActiveTab("accordion")}
             className={`py-1 px-3 rounded-md text-xs font-mono transition-colors ${
               activeTab === "accordion"
-                ? "bg-[#1d1f29] text-white border border-[#384259]"
-                : "text-[#9BA3B8] hover:text-white"
+                ? "bg-white text-black font-semibold border border-white shadow-sm"
+                : "text-white/50 hover:text-white"
             }`}
           >
             <span className="flex items-center gap-1.5">
@@ -219,8 +219,8 @@ export function StepTerms({
             onClick={() => setActiveTab("fulltext")}
             className={`py-1 px-3 rounded-md text-xs font-mono transition-colors ${
               activeTab === "fulltext"
-                ? "bg-[#1d1f29] text-white border border-[#384259]"
-                : "text-[#9BA3B8] hover:text-white"
+                ? "bg-white text-black font-semibold border border-white shadow-sm"
+                : "text-white/50 hover:text-white"
             }`}
           >
             <span className="flex items-center gap-1.5">
@@ -236,7 +236,7 @@ export function StepTerms({
             <span>Document Read Completed</span>
           </span>
         ) : (
-          <span className="flex items-center gap-1 text-xs text-amber-300 font-mono">
+          <span className="flex items-center gap-1 text-xs text-white/60 font-mono">
             <ArrowDownCircle className="h-3.5 w-3.5 animate-pulse" />
             <span>Scroll full text to bottom to proceed</span>
           </span>
@@ -254,7 +254,7 @@ export function StepTerms({
             className="w-full space-y-2"
           >
             {/* Articles */}
-            <div className="border border-[#1F2433] rounded-xl p-3 bg-[#11131c]">
+            <div className="border border-white/[0.08] rounded-xl p-3 bg-white/[0.02]">
               <span className="text-xs font-mono font-bold text-white uppercase tracking-wider block mb-2">
                 Part B: Articles (1 — 20)
               </span>
@@ -271,7 +271,7 @@ export function StepTerms({
             </div>
 
             {/* Schedules */}
-            <div className="border border-[#1F2433] rounded-xl p-3 bg-[#11131c]">
+            <div className="border border-white/[0.08] rounded-xl p-3 bg-white/[0.02]">
               <span className="text-xs font-mono font-bold text-white uppercase tracking-wider block mb-2">
                 Schedules (A — F)
               </span>
@@ -293,16 +293,16 @@ export function StepTerms({
       {/* View 2: Read Full Text ScrollArea tracking scroll-to-bottom */}
       {activeTab === "fulltext" && (
         <div className="space-y-2">
-          <div className="rounded-xl border border-[#1F2433] bg-[#0c0e17] overflow-hidden">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] overflow-hidden">
             <ScrollArea
-              className="h-[520px] p-6 text-xs text-[#9BA3B8]"
+              className="h-[520px] p-6 text-xs text-white/70"
               viewportRef={viewportRef}
               onScrollCapture={checkScrollPosition}
             >
               <div className="space-y-4 max-w-4xl mx-auto">
                 <TermsReader content={parsedTerms.rawText} />
-                <div className="pt-8 pb-4 text-center border-t border-[#1F2433]">
-                  <p className="font-mono text-xs text-emerald-400 font-semibold">
+                <div className="pt-8 pb-4 text-center border-t border-white/[0.08]">
+                  <p className="font-mono text-xs text-white/90 font-semibold">
                     --- END OF AGREEMENT DOCUMENT (HASH: {parsedTerms.termsHash.slice(0, 14)}...) ---
                   </p>
                   <Button
@@ -312,7 +312,7 @@ export function StepTerms({
                       setScrolledToEnd(true);
                       onReadCompleted(parsedTerms.termsHash);
                     }}
-                    className="mt-3 text-xs font-mono"
+                    className="mt-3 text-xs font-mono border-white/20 text-white hover:bg-white/[0.06] rounded-xl"
                   >
                     Confirm Read to End
                   </Button>
@@ -324,8 +324,8 @@ export function StepTerms({
       )}
 
       {/* Navigation Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-[#1F2433]">
-        <span className="text-xs text-[#5A6275] font-sans">
+      <div className="flex items-center justify-between pt-4 border-t border-white/[0.08]">
+        <span className="text-xs text-white/40 font-sans">
           {scrolledToEnd
             ? "Step 3 is unlocked."
             : "Reviewing the complete document text is required before proceeding to acknowledgements."}
@@ -335,7 +335,7 @@ export function StepTerms({
           type="button"
           onClick={onContinue}
           disabled={!scrolledToEnd || isPlaceholderBlocked}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs disabled:opacity-40"
+          className="px-6 py-2.5 bg-white text-black hover:bg-white/90 font-mono text-xs font-medium rounded-xl disabled:opacity-40 transition-colors"
         >
           Proceed to Acknowledgements
         </Button>

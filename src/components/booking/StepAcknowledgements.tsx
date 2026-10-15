@@ -56,26 +56,26 @@ export function StepAcknowledgements({
 
   return (
     <div className="space-y-6">
-      <div className="border-b border-[#1F2433] pb-4">
+      <div className="border-b border-white/[0.08] pb-4">
         <h2 className="text-sm font-semibold tracking-wider font-mono text-white flex items-center justify-between">
           <span>PART C: BUYER MANDATORY ACKNOWLEDGEMENTS</span>
-          <span className="text-[11px] text-[#9BA3B8] font-normal font-sans">
+          <span className="text-[11px] text-white/50 font-normal font-sans">
             Step 3 of 4
           </span>
         </h2>
-        <p className="text-xs text-[#9BA3B8] mt-1 font-sans">
+        <p className="text-xs text-white/50 mt-1 font-sans">
           You must individually acknowledge each statutory representation and risk disclosure below.
           Every acknowledgement is timestamped and recorded with your signed agreement.
         </p>
       </div>
 
-      <div className="flex items-center justify-between p-3 rounded-xl border border-[#1F2433] bg-[#0c0e17] text-xs font-mono">
-        <span className="text-[#9BA3B8]">
+      <div className="flex items-center justify-between p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] text-xs font-mono">
+        <span className="text-white/60">
           Progress: {tickedCount} of {visibleItems.length} acknowledged
         </span>
         <Badge
-          variant={allTicked ? "success" : "secondary"}
-          className="font-mono text-[10px]"
+          variant={allTicked ? "outline" : "secondary"}
+          className={`font-mono text-[10px] ${allTicked ? "bg-white/10 text-white border-white/30" : "bg-white/[0.04] text-white/50 border-white/10"}`}
         >
           {allTicked ? "All Required Boxes Ticked" : "Pending Signatures"}
         </Badge>
@@ -91,8 +91,8 @@ export function StepAcknowledgements({
               key={item.id}
               className={`border transition-all cursor-pointer ${
                 isChecked
-                  ? "border-blue-500/40 bg-blue-500/[0.03]"
-                  : "border-[#1F2433] bg-[#11131c] hover:border-[#384259]"
+                  ? "border-white/30 bg-white/[0.05]"
+                  : "border-white/[0.08] bg-white/[0.02] hover:border-white/20"
               }`}
               onClick={() => onToggleAcknowledgement(item.id, !isChecked)}
             >
@@ -111,12 +111,12 @@ export function StepAcknowledgements({
                       {item.id}
                     </span>
                     {timestamp && (
-                      <span className="text-[10px] font-mono text-[#5A6275]">
+                      <span className="text-[10px] font-mono text-white/40">
                         Ticked {new Date(timestamp).toLocaleTimeString()}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-[#9BA3B8] leading-relaxed font-sans">
+                  <p className="text-xs text-white/60 leading-relaxed font-sans">
                     {item.text}
                   </p>
                 </div>
@@ -126,12 +126,12 @@ export function StepAcknowledgements({
         })}
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t border-[#1F2433]">
+      <div className="flex items-center justify-between pt-4 border-t border-white/[0.08]">
         <Button
           type="button"
           variant="outline"
           onClick={onBack}
-          className="px-4 py-2 text-xs font-mono"
+          className="px-4 py-2 text-xs font-mono border-white/20 text-white hover:bg-white/[0.06] rounded-xl"
         >
           Back to Terms
         </Button>
@@ -140,7 +140,7 @@ export function StepAcknowledgements({
           type="button"
           onClick={onContinue}
           disabled={!allTicked}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs disabled:opacity-40"
+          className="px-6 py-2.5 bg-white text-black hover:bg-white/90 font-mono text-xs font-medium rounded-xl disabled:opacity-40 transition-colors"
         >
           Proceed to Sign & Escrow
         </Button>

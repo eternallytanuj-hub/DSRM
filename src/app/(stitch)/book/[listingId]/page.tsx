@@ -60,8 +60,8 @@ export default async function BookPassPage({ params }: BookPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#07080C] text-[#F0F3F8] mkt-stage">
+    <div className="w-full animate-in fade-in duration-300 pb-12">
       <BookingWizard listing={pass} />
-    </main>
+    </div>
   );
 }

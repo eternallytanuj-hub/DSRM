@@ -154,45 +154,45 @@ export function ViewAgreementDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg bg-[#0d0f18] border-[#1F2433] text-[#F0F3F8]">
+      <DialogContent className="max-w-lg bg-[#07080C] border border-white/10 text-white backdrop-blur-2xl">
         <DialogHeader>
           <DialogTitle className="text-sm font-mono text-white flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-blue-400" />
+              <FileText className="h-4 w-4 text-white" />
               <span>Signed Booking Agreement</span>
             </span>
             {agreement && (
-              <Badge variant="outline" className="font-mono text-[10px] text-blue-400 border-blue-500/30">
+              <Badge variant="outline" className="font-mono text-[10px] text-white/80 border-white/20 bg-white/5">
                 v{agreement.termsVersion}
               </Badge>
             )}
           </DialogTitle>
-          <DialogDescription className="text-xs text-[#9BA3B8] font-sans">
+          <DialogDescription className="text-xs text-white/60 font-sans">
             Cryptographic audit record and EIP-712 signature verification data.
           </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
-          <div className="py-8 text-center text-xs font-mono text-[#9BA3B8]">
-            <RefreshCw className="h-4 w-4 animate-spin mx-auto mb-2 text-blue-400" />
+          <div className="py-8 text-center text-xs font-mono text-white/60">
+            <RefreshCw className="h-4 w-4 animate-spin mx-auto mb-2 text-white" />
             Loading cryptographic agreement data...
           </div>
         ) : agreement ? (
           <div className="space-y-4 font-mono text-xs">
-            <div className="p-3 rounded-xl border border-[#1F2433] bg-[#0c0e17] space-y-2">
+            <div className="p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] space-y-2">
               <div className="flex justify-between items-center text-[11px]">
-                <span className="text-[#5A6275]">Agreement Status:</span>
-                <span className="text-emerald-400 font-semibold">{agreement.status}</span>
+                <span className="text-white/40">Agreement Status:</span>
+                <span className="text-white font-semibold">{agreement.status}</span>
               </div>
               <div className="flex justify-between items-center text-[11px]">
-                <span className="text-[#5A6275]">Booking ID:</span>
+                <span className="text-white/40">Booking ID:</span>
                 <span className="text-white truncate max-w-[220px]" title={agreement.bookingId}>
                   {agreement.bookingId}
                 </span>
               </div>
               <div className="flex justify-between items-center text-[11px]">
-                <span className="text-[#5A6275]">Terms Version:</span>
-                <span className="text-blue-400">{agreement.termsVersion}</span>
+                <span className="text-white/40">Terms Version:</span>
+                <span className="text-white">{agreement.termsVersion}</span>
               </div>
             </div>
 
@@ -201,13 +201,13 @@ export function ViewAgreementDialog({
               <HashBadge label="EIP-712 Signature" value={agreement.signature} truncateLength={10} />
             </div>
 
-            <div className="grid grid-cols-2 gap-2 text-[11px] p-3 rounded-lg border border-[#1F2433] bg-[#0c0e17]">
+            <div className="grid grid-cols-2 gap-2 text-[11px] p-3 rounded-lg border border-white/[0.08] bg-white/[0.02]">
               <div>
-                <span className="text-[#5A6275] block">Server Nonce:</span>
+                <span className="text-white/40 block">Server Nonce:</span>
                 <span className="text-white">{agreement.nonce}</span>
               </div>
               <div>
-                <span className="text-[#5A6275] block">Signature Deadline:</span>
+                <span className="text-white/40 block">Signature Deadline:</span>
                 <span className="text-white">
                   {new Date(Number(agreement.deadline) * 1000).toUTCString().slice(0, 22)} UTC
                 </span>
@@ -216,12 +216,12 @@ export function ViewAgreementDialog({
 
             {agreement.txHash && (
               <div className="flex justify-between items-center text-[11px] pt-1">
-                <span className="text-[#5A6275]">Escrow Deposit Tx:</span>
+                <span className="text-white/40">Escrow Deposit Tx:</span>
                 <a
                   href={`https://sepolia.etherscan.io/tx/${agreement.txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline flex items-center gap-1"
+                  className="text-white hover:underline flex items-center gap-1 font-mono"
                 >
                   <span>{agreement.txHash.slice(0, 10)}...</span>
                   <ExternalLink className="h-3 w-3" />
@@ -229,11 +229,11 @@ export function ViewAgreementDialog({
               </div>
             )}
 
-            <div className="pt-2 border-t border-[#1F2433] flex justify-end">
+            <div className="pt-2 border-t border-white/[0.08] flex justify-end">
               <Button
                 type="button"
                 onClick={handleDownloadJson}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs flex items-center justify-center gap-2"
+                className="w-full bg-white text-black hover:bg-white/90 font-mono text-xs flex items-center justify-center gap-2 h-10 font-semibold"
               >
                 <Download className="h-3.5 w-3.5" />
                 <span>Download Signed Agreement (JSON)</span>

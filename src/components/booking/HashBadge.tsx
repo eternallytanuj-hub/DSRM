@@ -41,10 +41,10 @@ export function HashBadge({
 
   return (
     <div className={cn("inline-flex items-center gap-1.5", className)}>
-      {label && <span className="text-[10px] font-mono text-[#9BA3B8]">{label}:</span>}
+      {label && <span className="text-[10px] font-mono text-white/50">{label}:</span>}
       <Badge
         variant="secondary"
-        className="font-mono text-[11px] bg-[#191b25] border-[#1F2433] text-[#F0F3F8] hover:bg-[#1d1f29] inline-flex items-center gap-1.5 py-0.5 px-2 font-normal"
+        className="font-mono text-[11px] bg-white/[0.04] border-white/10 text-white/90 hover:bg-white/[0.08] inline-flex items-center gap-1.5 py-0.5 px-2 font-normal"
       >
         <span title={value}>{displayVal}</span>
         {copyable && (
@@ -55,7 +55,7 @@ export function HashBadge({
                   type="button"
                   onClick={handleCopy}
                   aria-label={copied ? "Copied" : `Copy ${label || "value"}`}
-                  className="p-0.5 text-[#9BA3B8] hover:text-white rounded focus:outline-none focus:ring-1 focus:ring-blue-500 inline-flex items-center justify-center transition-colors"
+                  className="p-0.5 text-white/40 hover:text-white rounded focus:outline-none focus:ring-1 focus:ring-white/20 inline-flex items-center justify-center transition-colors"
                 >
                   {copied ? (
                     <Check className="h-3 w-3 text-emerald-400" />

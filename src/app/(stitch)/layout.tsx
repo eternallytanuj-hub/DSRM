@@ -75,7 +75,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </aside>
 
         <main className="flex-1 overflow-y-auto relative z-0">
-          <div className="max-w-6xl mx-auto p-8">
+          <div className="max-w-7xl mx-auto p-6 lg:p-8">
             {children}
           </div>
         </main>
