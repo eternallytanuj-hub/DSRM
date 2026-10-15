@@ -1159,7 +1159,7 @@ setInterval(() => {
     document.body.appendChild(scriptEl);
 
     if (typeof window !== 'undefined') {
-      (window as any).NEXT_PUBLIC_SATELLITE_API_URL = process.env.NEXT_PUBLIC_SATELLITE_API_URL || 'https://dsrmbackend-production.up.railway.app/api/v1/satellites';
+      (window as any).NEXT_PUBLIC_SATELLITE_API_URL = process.env.NEXT_PUBLIC_SATELLITE_API_URL || 'https://dsrm-backend.onrender.com/api/v1/satellites';
     }
 
     // Load Mapbox script
