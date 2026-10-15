@@ -19,6 +19,7 @@ interface MerkleProofViewerProps {
   originalFrames?: TelemetryFrame[];
   expectedRoot: `0x${string}` | null;
   isTampered?: boolean;
+  onSelectFrame?: (index: number) => void;
 }
 
 interface StepWithHash {
@@ -35,6 +36,7 @@ export function MerkleProofViewer({
   originalFrames,
   expectedRoot,
   isTampered = false,
+  onSelectFrame,
 }: MerkleProofViewerProps) {
   const [proof, setProof] = useState<MerkleProof | null>(null);
   const [stepsWithHashes, setStepsWithHashes] = useState<StepWithHash[]>([]);
@@ -171,8 +173,27 @@ export function MerkleProofViewer({
 
   if (!selectedFrame) {
     return (
-      <div className="p-8 text-center bg-zinc-950 rounded-lg text-zinc-500 font-mono text-sm">
-        Select a frame from the telemetry log above to inspect its cryptographic Merkle proof.
+      <div className="p-6 text-center bg-zinc-950 rounded-xl space-y-3 font-mono text-xs">
+        <div className="text-zinc-400">
+          Select any frame to inspect its on-chain Merkle inclusion proof.
+        </div>
+        {frames.length > 0 && onSelectFrame && (
+          <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
+            <span className="text-zinc-600 text-[11px] mr-1">Quick Select:</span>
+            {frames.slice(0, 6).map((f) => (
+              <button
+                key={f.index}
+                onClick={() => onSelectFrame(f.index)}
+                className="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-[11px] transition-colors"
+              >
+                Frame #{f.index}
+              </button>
+            ))}
+            {frames.length > 6 && (
+              <span className="text-zinc-600 text-[10px]">+{frames.length - 6} more</span>
+            )}
+          </div>
+        )}
       </div>
     );
   }
@@ -180,17 +201,31 @@ export function MerkleProofViewer({
   const { frameBytes } = buildLeafPreimage(selectedFrame);
 
   return (
-    <div className="space-y-4 bg-zinc-950 p-5 rounded-lg text-sm font-mono text-zinc-300">
+    <div className="space-y-4 bg-zinc-950 p-5 rounded-xl text-xs font-mono text-zinc-300">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-zinc-400" />
           <span className="font-semibold text-zinc-100">
             Merkle Inclusion Proof — Frame #{selectedFrame.index}
           </span>
+          {onSelectFrame && frames.length > 1 && (
+            <select
+              value={selectedFrame.index}
+              onChange={(e) => onSelectFrame(Number(e.target.value))}
+              aria-label="Select frame"
+              className="bg-zinc-900 text-zinc-300 rounded px-2 py-0.5 text-[11px] outline-none cursor-pointer"
+            >
+              {frames.map((f) => (
+                <option key={f.index} value={f.index}>
+                  Frame #{f.index}
+                </option>
+              ))}
+            </select>
+          )}
           {isTampered && (
             <span className="text-[10px] bg-red-950 text-red-400 px-2 py-0.5 rounded font-sans uppercase">
-              Tampered Payload Divergence
+              Tampered Divergence
             </span>
           )}
         </div>
