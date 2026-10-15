@@ -293,8 +293,9 @@ export default function MarketplacePage() {
   useEffect(() => {
     async function loadData() {
       try {
+        const backendPassesUrl = process.env.NEXT_PUBLIC_SATELLITE_API_URL?.replace('/satellites', '/marketplace/passes') || 'https://dsrm-backend.onrender.com/api/v1/marketplace/passes';
         const [backendRes, operatorRes] = await Promise.allSettled([
-          fetch('https://dsrmbackend-production.up.railway.app/api/v1/marketplace/passes').then(r => r.ok ? r.json() : null),
+          fetch(backendPassesUrl).then(r => r.ok ? r.json() : null),
           fetchOperatorListings()
         ]);
 

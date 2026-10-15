@@ -214,7 +214,7 @@ export default function TelemetryOraclePage() {
     setIsLoading(true);
     const urls = [
       getBackendUrl(),
-      'https://dsrmbackend-production.up.railway.app'
+      'https://dsrm-backend.onrender.com'
     ];
 
     for (const base of urls) {
@@ -237,7 +237,7 @@ export default function TelemetryOraclePage() {
   const fetchFrames = async () => {
     const urls = [
       getBackendUrl(),
-      'https://dsrmbackend-production.up.railway.app'
+      'https://dsrm-backend.onrender.com'
     ];
 
     for (const base of urls) {

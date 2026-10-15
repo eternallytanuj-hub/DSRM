@@ -7,7 +7,7 @@ export async function searchMarketplaceWithGroq(query: string, candidates: Satel
 
   // Try backend AI endpoint first
   const backendSearchUrl = process.env.NEXT_PUBLIC_SATELLITE_API_URL?.replace('/satellites', '/marketplace/search') 
-    || 'https://dsrmbackend-production.up.railway.app/api/v1/marketplace/search';
+    || 'https://dsrm-backend.onrender.com/api/v1/marketplace/search';
 
   try {
     const backendRes = await fetch(backendSearchUrl, {
