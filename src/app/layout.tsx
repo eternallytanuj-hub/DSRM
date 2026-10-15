@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppProvider } from "./AppContext";
 import { Web3Provider } from "@/components/Web3Provider";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -38,6 +39,7 @@ export default function RootLayout({
         <AppProvider>
           <Web3Provider>
             {children}
+            <Toaster />
           </Web3Provider>
         </AppProvider>
       </body>

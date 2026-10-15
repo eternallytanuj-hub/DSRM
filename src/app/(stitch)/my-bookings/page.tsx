@@ -7,17 +7,20 @@ import {
   RefreshCw, 
   AlertCircle, 
   User, 
-  ArrowUpRight
+  ArrowUpRight,
+  FileText
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAccount } from 'wagmi';
 import { supabase, BookingRecord, Profile } from '@/lib/supabase';
 import { fetchBookings, syncUserProfile } from '@/app/actions/supabase';
+import { ViewAgreementDialog } from '@/components/booking/ViewAgreementDialog';
 
 export default function MyBookingsPage() {
   const { address, isConnected } = useAccount();
   const [bookings, setBookings] = useState<BookingRecord[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [agreementBooking, setAgreementBooking] = useState<BookingRecord | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<'my' | 'all'>('all');
@@ -311,6 +314,9 @@ export default function MyBookingsPage() {
                         {b.locked_amount}
                       </span>
                       {getStatusBadge(b.status)}
+                      <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20">
+                        Agreement v1.0
+                      </span>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/40 uppercase tracking-wider font-mono mt-1">
                       <span className="text-white/70">{b.satellite}</span>
@@ -336,6 +342,16 @@ export default function MyBookingsPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-white/[0.04]">
+                  <button
+                    type="button"
+                    onClick={() => setAgreementBooking(b)}
+                    className="px-3 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 text-xs font-mono flex items-center gap-1.5 transition-all"
+                    title="View Agreement & Signature"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>View agreement</span>
+                  </button>
+
                   {b.tx_hash && (
                     <a
                       href={b.etherscan_url || `https://sepolia.etherscan.io/tx/${b.tx_hash}`}
@@ -375,6 +391,12 @@ export default function MyBookingsPage() {
           ))
         )}
       </div>
+
+      <ViewAgreementDialog
+        open={Boolean(agreementBooking)}
+        onOpenChange={(open) => !open && setAgreementBooking(null)}
+        booking={agreementBooking}
+      />
     </div>
   );
 }

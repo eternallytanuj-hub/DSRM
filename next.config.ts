@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
       ...(config.ignoreWarnings || []),
       /Module not found: Can't resolve/,
     ];
+    config.module = config.module || { rules: [] };
+    config.module.rules.push({
+      test: /\.md$/,
+      type: "asset/source",
+    });
     return config;
   },
   async rewrites() {

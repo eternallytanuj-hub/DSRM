@@ -20,8 +20,7 @@ import { useAccount, useChainId, useConnect, useSwitchChain, useWriteContract } 
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { parseEther, stringToHex, keccak256 } from 'viem';
-import { sepolia } from 'wagmi/chains';
-
+import { useRouter } from 'next/navigation';
 import { searchMarketplaceWithGroq } from './actions';
 import { DEFAULT_REAL_PASSES, SatellitePass } from './types';
 import SatelliteEscrowArtifact from '@/contracts/SatelliteEscrow.json';
@@ -32,7 +31,7 @@ import { MetaMaskLogo, EthereumDiamond } from '@/components/Web3Icons';
 
 const ESCROW_AMOUNT_ETH = '0.0005';
 const ESCROW_AMOUNT_DISPLAY = '0.0005 Sepolia ETH';
-const SEPOLIA_CHAIN_ID = sepolia.id; // 11155111
+const SEPOLIA_CHAIN_ID = 11155111;
 
 const SAMPLE_QUERIES = [
   "High-speed broadband pass over South Asia / India",
@@ -94,13 +93,11 @@ export default function MarketplacePage() {
 
   const isWrongNetwork = isConnected && chainId !== SEPOLIA_CHAIN_ID;
 
-  // Open booking modal
+  const router = useRouter();
+
+  // Open booking flow at /book/[listingId]
   const handleOpenBooking = (p: SatellitePass) => {
-    setSelectedPass(p);
-    setBookingResult(null);
-    setErrorMessage(null);
-    setSigningStep('IDLE');
-    setIsSigning(false);
+    router.push(`/book/${encodeURIComponent(p.id)}`);
   };
 
   const handleCloseModal = () => {

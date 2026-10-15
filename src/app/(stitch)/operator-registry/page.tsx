@@ -52,8 +52,6 @@ export default function OperatorRegistryPage() {
       }
     } catch (err) {
       console.error('Error loading Supabase operator data:', err);
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
